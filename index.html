@@ -3,100 +3,209 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine 💌</title>
+<title>Valentine 💖</title>
 
 <style>
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
 body {
-    overflow: hidden;
-    background: linear-gradient(to top right, #ff9a9e, #fad0c4);
+  overflow: hidden;
+  background: radial-gradient(circle at top, #1a1a2e, #000);
+  height: 100vh;
+}
+
+/* ===== STARS ===== */
+.star {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  z-index: 1;
 }
 
 /* ===== HEARTS ===== */
 .heart {
-    position: fixed;
-    bottom: -20px;
-    color: rgba(255, 0, 80, 0.7);
-    font-size: 20px;
-    animation: floatUp 6s linear infinite;
+  position: fixed;
+  bottom: -20px;
+  z-index: 2;
+  color: rgba(255, 80, 120, 0.8);
+  animation: fly 6s linear infinite;
 }
 
-@keyframes floatUp {
-    from {
-        transform: translateY(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateY(-120vh);
-        opacity: 0;
-    }
+@keyframes fly {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-120vh); opacity: 0; }
 }
 
-/* ===== SCREENS ===== */
-SCREENS ===== */
+/* ===== SCREEN ===== */
 .screen {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    position: fixed;
-    top: 0;
-    left: 0;
-    opacity: 1;
-    z-index: 10;
-    transition: opacity 1s ease;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 10;
+  transition: opacity 1s ease;
 }
 
 .hidden {
-    opacity: 0;
-    pointer-events: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* ===== LETTER ===== */
+/* ===== ENVELOPE ===== */
+.wrapper {
+  position: relative;
+  width: 260px;
+  height: 180px;
+}
+
+.envelope {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ffd1dc;
+  border-radius: 10px;
+}
+
+.lid {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 130px solid transparent;
+  border-right: 130px solid transparent;
+  border-bottom: 90px solid #ff8fab;
+  top: -90px;
+  left: 0;
+  transform-origin: bottom;
+  transition: transform 1s ease;
+}
+
+.open .lid {
+  transform: rotateX(180deg);
+}
+
+/* ===== LETTER TEXT ===== */
 .letter {
-    background: white;
-    width: 260px;
-    height: 180px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    animation: pulse 2s infinite;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 20;
+  opacity: 0;
+  transition: all 1s ease;
 }
 
-.letter span {
-    font-size: 50px;
+.open .letter {
+  opacity: 1;
+  top: -40px;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.letter p {
+  color: #ff3d6b;
+  font-size: 18px;
 }
 
-/* ===== LOVE SCREEN ===== */
-h1 {
-    color: white;
-    font-size: 2.5em;
-    text-align: center;
-    margin-bottom: 20px;
+/* ===== BUTTON ===== */
+button {
+  margin-top: 20px;
+  padding: 10px 25px;
+  border-radius: 20px;
+  border: none;
+  background: #ff4b7d;
+  color: white;
+  font-size: 16px;
 }
 
-p {
-    color: white;
-    font-size: 1.3em;
-    text-align: center;
-    max-width: 300px;
+/* ===== FLOWER ===== */
+.garden {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+}
+
+.flower {
+  position: relative;
+  width: 120px;
+  height: 200px;
+  animation: bloom 2s ease forwards;
+}
+
+@keyframes bloom {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.petal {
+  position: absolute;
+  width: 45px;
+  height: 70px;
+  background: #ff3d6b;
+  border-radius: 50% 50% 0 0;
+  top: 20px;
+  left: 37px;
+  transform-origin: bottom center;
+}
+
+.p1 { transform: rotate(0deg); }
+.p2 { transform: rotate(72deg); }
+.p3 { transform: rotate(144deg); }
+.p4 { transform: rotate(216deg); }
+.p5 { transform: rotate(288deg); }
+
+.center {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #ffcc00;
+  border-radius: 50%;
+  top: 55px;
+  left: 45px;
+  z-index: 2;
+}
+
+.stem {
+  position: absolute;
+  width: 8px;
+  height: 90px;
+  background: #2ecc71;
+  top: 90px;
+  left: 56px;
+}
+
+.leaf {
+  position: absolute;
+  width: 40px;
+  height: 20px;
+  background: #27ae60;
+  border-radius: 50%;
+  top: 130px;
+}
+
+.leaf.left { left: 15px; transform: rotate(-30deg); }
+.leaf.right { right: 15px; transform: rotate(30deg); }
+
+/* ===== FINAL TEXT ===== */
+h1, h2 {
+  color: white;
+  text-align: center;
 }
 </style>
 </head>
@@ -105,43 +214,68 @@ p {
 
 <!-- SCREEN 1 -->
 <div class="screen" id="screen1">
-    <h1>Có thư cho em nè 💌</h1>
-    <div class="letter" onclick="openLetter()">
-        <span>💖</span>
+  <h1>Có thư cho em nè 💌</h1>
+  <div class="wrapper" id="env">
+    <div class="lid"></div>
+    <div class="envelope"></div>
+    <div class="letter">
+      <p>Happy Valentine’s Day ❤️</p>
     </div>
-    <p>(Bấm vào lá thư nha)</p>
+  </div>
+  <button onclick="openLetter()">Open</button>
 </div>
 
 <!-- SCREEN 2 -->
 <div class="screen hidden" id="screen2">
-    <h1>💘 Anh yêu em 💘</h1>
-    <p>
-        Valentine này anh không có gì nhiều,<br>
-        chỉ có một trái tim luôn hướng về em 🥰<br><br>
-        Cảm ơn em vì đã đến bên anh ❤️
-    </p>
+  <h2>💖 Anh yêu em rất nhiều 💖</h2>
+  <p style="color:white; margin-top:10px;">
+    Cảm ơn em đã đến bên anh 🥰
+  </p>
+
+  <div class="garden">
+    <div class="flower">
+      <div class="petal p1"></div>
+      <div class="petal p2"></div>
+      <div class="petal p3"></div>
+      <div class="petal p4"></div>
+      <div class="petal p5"></div>
+      <div class="center"></div>
+      <div class="stem"></div>
+      <div class="leaf left"></div>
+      <div class="leaf right"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-/* HEART GENERATOR */
+/* STARS */
 setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "❤";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (15 + Math.random() * 20) + "px";
-    heart.style.animationDuration = (4 + Math.random() * 4) + "s";
-    document.body.appendChild(heart);
+  const s = document.createElement("div");
+  s.className = "star";
+  s.style.top = Math.random()*100+"vh";
+  s.style.left = Math.random()*100+"vw";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),2000);
+},300);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 8000);
-}, 300);
+/* HEARTS */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = "❤";
+  h.style.left = Math.random()*100+"vw";
+  h.style.fontSize = 15 + Math.random()*20 + "px";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),6000);
+},300);
 
-/* TRANSITION */
-function openLetter() {
+/* OPEN LETTER */
+function openLetter(){
+  document.getElementById("env").classList.add("open");
+  setTimeout(()=>{
     document.getElementById("screen1").classList.add("hidden");
     document.getElementById("screen2").classList.remove("hidden");
+  },1500);
 }
 </script>
 
