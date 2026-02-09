@@ -3,274 +3,241 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine For My Love 💖</title>
+<title>Valentine tặng Công Chúa 💖</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, sans-serif}
 
 body{
-  height:100vh;
-  background: radial-gradient(circle at center, #2b1b3d, #000);
-  overflow:hidden;
-  color:white;
+    height:100vh;
+    background: radial-gradient(circle at top, #1b1b3a, #050505);
+    overflow:hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ⭐ Stars */
 .star{
-  position:absolute;
-  width:2px;height:2px;
-  background:white;
-  opacity:.6;
-  border-radius: 50%;
+    position:absolute;
+    width:2px;height:2px;
+    background:white;
+    border-radius: 50%;
+    opacity:.5;
 }
 
-/* ❤️ Hearts */
-.heart{
-  position:absolute;
-  bottom: -50px;
-  color:#ff4d6d;
-  animation:float 6s linear forwards;
-  z-index: 1;
-}
-@keyframes float{
-  to{transform:translateY(-110vh) rotate(360deg);opacity:0}
-}
-
-/* ✉️ Envelope Container */
+/* ✉️ Envelope */
 .envelope-wrapper {
+    position: relative;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.5s;
+}
+
+.envelope {
+    position: relative;
+    width: 280px;
+    height: 180px;
+    background: #ffb3c1; /* Màu thân thư */
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+/* NẮP THƯ - Đã sửa lỗi mở ngược */
+.envelope::before {
+    content: "";
     position: absolute;
-    top: 45%;
+    top: 0;
+    z-index: 5;
+    border-left: 140px solid transparent;
+    border-right: 140px solid transparent;
+    border-top: 110px solid #ff85a1; /* Nắp quay xuống */
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.envelope.open::before {
+    transform: rotateX(180deg);
+    z-index: 1; /* Đẩy ra sau để lộ thư */
+}
+
+/* 📜 Thư ẩn bên trong */
+.letter {
+    position: absolute;
+    bottom: 5px;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
+    width: 250px;
+    height: 150px;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    color: #c9184a;
+    text-align: center;
+    transition: 0.6s;
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-.envelope{
-  position:relative;
-  width:280px;height:180px;
-  background:#ffd6e0;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  z-index: 5;
+.envelope.open .letter {
+    transform: translate(-50%, -100px); /* Đẩy thư lên cao */
+    height: auto;
 }
 
-/* Sửa lỗi nắp thư ở đây */
-.lid{
-  position:absolute;
-  top:0;
-  left:0;
-  width:0;height:0;
-  border-left:140px solid transparent;
-  border-right:140px solid transparent;
-  border-top:100px solid #ff9eb5; /* Quay nắp xuống */
-  transform-origin: top;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 11;
+/* 🔘 Button Open */
+.open-btn {
+    position: absolute;
+    top: 70%;
+    padding: 12px 35px;
+    background: #ff4d6d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+    transition: 0.3s;
+}
+.open-btn:hover { background: #ff758f; scale: 1.1; }
+
+/* 🌷 Vườn Tulip */
+.garden {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    pointer-events: none;
 }
 
-.envelope.open .lid{
-  transform: rotateX(180deg);
-  z-index: 4; /* Đẩy ra sau khi mở */
-}
-
-/* 📜 Letter */
-.letter{
-  position:absolute;
-  bottom: 10px;
-  left:50%;
-  transform:translateX(-50%);
-  width:250px;
-  height: 160px;
-  padding:20px;
-  border-radius:8px;
-  background: #fff;
-  background-image: repeating-linear-gradient(#fff, #fff 24px, #ffe5ec 25px);
-  color:#c9184a;
-  text-align:center;
-  transition: 0.8s 0.3s; /* Delay một chút sau khi nắp mở */
-  z-index: 10;
-  box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
-}
-
-.envelope.open .letter{
-  transform: translate(-50%, -120px);
-  height: auto;
-}
-
-/* 🔘 Button */
-button{
-  position:absolute;
-  top:75%;
-  left:50%;
-  transform:translateX(-50%);
-  padding:15px 40px;
-  border:none;
-  border-radius:50px;
-  background:#ff4d6d;
-  color:white;
-  font-weight: bold;
-  font-size:18px;
-  cursor:pointer;
-  box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
-  z-index: 20;
-  transition: 0.3s;
-}
-button:hover { background: #ff758f; scale: 1.05; }
-button:active { scale: 0.95; }
-
-/* 🌷 Tulip Garden */
-.garden{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
-  gap:30px;
-  padding-bottom: 10px;
-}
-
-.tulip{
-  position:relative;
-  width:50px;
-  animation: sway 3s ease-in-out infinite alternate;
-  transform-origin: bottom;
+.tulip {
+    position: relative;
+    margin: 0 -10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: sway 3s ease-in-out infinite alternate;
 }
 
 @keyframes sway {
-    from { transform: rotate(-3deg); }
-    to { transform: rotate(3deg); }
+    from { transform: rotate(-2deg); }
+    to { transform: rotate(2deg); }
 }
 
-.stem{
-  width:6px;
-  height:100px;
-  background:linear-gradient(to top, #1b4332, #2d6a4f);
-  margin: 0 auto;
-  border-radius: 3px;
+.flower {
+    position: relative;
+    width: 35px;
+    height: 40px;
 }
 
-.leaf{
-  position:absolute;
-  width:30px;
-  height:50px;
-  background:#40916c;
-  border-radius: 0 100% 0 100%;
-  bottom:40px;
+.petal {
+    position: absolute;
+    width: 25px;
+    height: 35px;
+    background: #ff4d6d;
+    border-radius: 50% 50% 10% 10%;
+    box-shadow: inset 2px -5px 10px rgba(0,0,0,0.1);
 }
-.leaf.left{ left:-15px; transform:rotate(-30deg); }
-.leaf.right{ right:-15px; transform:rotate(30deg) scaleX(-1); }
+.petal.left { left: -8px; transform: rotate(-20deg); background: #ff758f; }
+.petal.right { right: -8px; transform: rotate(20deg); background: #ff758f; }
+.petal.center { left: 5px; z-index: 2; }
 
-.flower{
-  position:absolute;
-  top:-35px;
-  left:50%;
-  transform:translateX(-50%);
-  width: 50px; height: 50px;
-}
-
-.petal{
-  position:absolute;
-  width:35px;
-  height:45px;
-  border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
-  box-shadow: inset 0 -5px 10px rgba(0,0,0,0.1);
+.stem {
+    width: 5px;
+    height: 80px;
+    background: linear-gradient(#2d6a4f, #1b4332);
+    border-radius: 3px;
 }
 
-.petal.left{ left: -5px; background:#ff758f; transform: rotate(-20deg); z-index: 2;}
-.petal.right{ right: -5px; background:#ff758f; transform: rotate(20deg); z-index: 2;}
-.petal.center{ left: 7px; background:#ff4d6d; width: 36px; z-index: 3; top: 2px;}
+.leaf {
+    position: absolute;
+    width: 15px;
+    height: 40px;
+    background: #40916c;
+    border-radius: 0 100% 0 100%;
+    bottom: 20px;
+    transform-origin: bottom right;
+}
+.leaf.left { left: -10px; transform: rotate(-30deg); }
+.leaf.right { right: -10px; transform: rotate(30deg) scaleX(-1); }
 
-.center-dot{
-  position:absolute;
-  top:15px;
-  left:50%;
-  width:8px;
-  height:8px;
-  background:#ffd166;
-  border-radius:50%;
-  transform:translateX(-50%);
-  z-index: 4;
+/* ❤️ Hearts */
+.heart {
+    position: absolute;
+    color: #ff4d6d;
+    animation: rise 5s linear infinite;
+}
+@keyframes rise {
+    from { transform: translateY(100vh) scale(0.5); opacity: 1; }
+    to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="envelope-wrapper">
-    <div class="envelope" id="env">
-        <div class="lid"></div>
+<div class="envelope-wrapper" id="env">
+    <div class="envelope">
         <div class="letter">
-            <h3 style="margin-bottom:10px">Happy Valentine’s Day 💖</h3>
-            <p>Anh yêu em rất nhiều 💕</p>
-            <p>Cảm ơn em đã đến bên anh 🥰</p>
+            <h3>Happy Valentine’s 💖</h3><br>
+            <p>Em là điều tuyệt vời nhất thế giới!</p>
+            <p>Anh yêu emmm 💕</p>
         </div>
     </div>
 </div>
 
-<button id="btn" onclick="openLetter()">Nhấn để mở thư 💌</button>
+<button class="open-btn" id="btn" onclick="openLetter()">Nhấn để mở thư 💌</button>
 
-<div class="garden">
-    <div class="tulip">
-        <div class="flower">
-            <div class="petal left"></div>
-            <div class="petal right"></div>
-            <div class="petal center"></div>
-            <div class="center-dot"></div>
-        </div>
-        <div class="stem"></div>
-        <div class="leaf left"></div>
-    </div>
-    <div class="tulip" style="animation-delay: -1s;">
-        <div class="flower">
-            <div class="petal left" style="background:#ff85a1"></div>
-            <div class="petal right" style="background:#ff85a1"></div>
-            <div class="petal center" style="background:#ff4d6d"></div>
-            <div class="center-dot"></div>
-        </div>
-        <div class="stem" style="height:130px"></div>
-        <div class="leaf left"></div>
-        <div class="leaf right"></div>
-    </div>
-    <div class="tulip" style="animation-delay: -0.5s;">
-        <div class="flower">
-            <div class="petal left"></div>
-            <div class="petal right"></div>
-            <div class="petal center"></div>
-            <div class="center-dot"></div>
-        </div>
-        <div class="stem"></div>
-        <div class="leaf right"></div>
-    </div>
-</div>
+<div class="garden" id="garden"></div>
 
 <script>
-// Tạo sao
-for(let i=0;i<80;i++){
-  let s=document.createElement('div');
-  s.className='star';
-  s.style.left=Math.random()*100+'vw';
-  s.style.top=Math.random()*100+'vh';
-  s.style.opacity=Math.random();
-  document.body.appendChild(s);
+// Tạo vườn hoa tulip dày đặc
+const garden = document.getElementById('garden');
+for(let i=0; i<25; i++) {
+    let t = document.createElement('div');
+    t.className = 'tulip';
+    t.style.animationDelay = (Math.random() * 2) + 's';
+    
+    // Ngẫu nhiên chiều cao hoa
+    let h = 60 + Math.random() * 60;
+    
+    t.innerHTML = `
+        <div class="flower">
+            <div class="petal left"></div>
+            <div class="petal right"></div>
+            <div class="petal center"></div>
+        </div>
+        <div class="stem" style="height:${h}px"></div>
+        <div class="leaf left"></div>
+        <div class="leaf right"></div>
+    `;
+    garden.appendChild(t);
 }
 
-// Tạo tim bay
+// Tạo sao đêm
+for(let i=0;i<100;i++){
+    let s=document.createElement('div');
+    s.className='star';
+    s.style.left=Math.random()*100+'vw';
+    s.style.top=Math.random()*100+'vh';
+    document.body.appendChild(s);
+}
+
+// Hiệu ứng tim bay
 setInterval(()=>{
-  let h=document.createElement('div');
-  h.className='heart';
-  h.innerHTML='❤️';
-  h.style.left=Math.random()*100+'vw';
-  h.style.fontSize=15+Math.random()*20+'px';
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-},500);
+    let h=document.createElement('div');
+    h.className='heart';
+    h.innerHTML='❤️';
+    h.style.left=Math.random()*100+'vw';
+    h.style.fontSize=Math.random()*20+10+'px';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),5000);
+},400);
 
 function openLetter(){
-  document.getElementById('env').classList.add('open');
-  document.getElementById('btn').style.opacity = '0';
-  setTimeout(() => {
-      document.getElementById('btn').style.display = 'none';
-  }, 500);
+    document.getElementById('env').classList.add('open');
+    document.getElementById('btn').style.display = 'none';
 }
 </script>
 
