@@ -6,56 +6,43 @@
 <title>Valentine 💖</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 
 body{
   height:100vh;
-  background: radial-gradient(circle at top, #1b1b3a, #000);
+  background:radial-gradient(circle at top,#1b1b3a,#000);
   overflow:hidden;
   color:white;
 }
 
-/* ⭐ Sao lấp lánh */
+/* ⭐ Stars */
 .star{
   position:absolute;
-  width:2px;
-  height:2px;
+  width:2px;height:2px;
   background:white;
   opacity:.8;
-  animation: twinkle 2s infinite alternate;
-}
-@keyframes twinkle{
-  from{opacity:.3}
-  to{opacity:1}
 }
 
-/* ❤️ Trái tim bay */
+/* ❤️ Hearts */
 .heart{
   position:absolute;
   color:#ff4d6d;
-  font-size:20px;
-  animation: floatUp 8s linear infinite;
+  animation:float 8s linear infinite;
 }
-@keyframes floatUp{
-  from{transform:translateY(100vh); opacity:1}
-  to{transform:translateY(-10vh); opacity:0}
+@keyframes float{
+  from{transform:translateY(100vh);opacity:1}
+  to{transform:translateY(-10vh);opacity:0}
 }
 
-/* ✉️ Phong thư */
+/* ✉️ Envelope */
 .envelope{
   position:absolute;
-  top:35%;
+  top:32%;
   left:50%;
   transform:translateX(-50%);
-  width:260px;
-  height:160px;
+  width:260px;height:160px;
   background:#ffd6e0;
-  border-radius:10px;
+  border-radius:12px;
   z-index:5;
 }
 
@@ -63,8 +50,7 @@ body{
   position:absolute;
   top:-80px;
   left:0;
-  width:0;
-  height:0;
+  width:0;height:0;
   border-left:130px solid transparent;
   border-right:130px solid transparent;
   border-bottom:80px solid #ff9eb5;
@@ -73,20 +59,26 @@ body{
 }
 
 .envelope.open .lid{
-  transform:rotateX(180deg);
+  transform:rotateX(-180deg);
 }
 
-/* 📜 Thư */
+/* 📜 Letter */
 .letter{
   position:absolute;
-  top:10px;
+  top:20px;
   left:50%;
   transform:translateX(-50%);
   width:230px;
-  padding:15px;
-  background:rgba(255,255,255,.85);
+  padding:18px;
+  border-radius:14px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      #fff,
+      #fff 22px,
+      #ffe5ec 23px
+    );
   color:#c9184a;
-  border-radius:12px;
   text-align:center;
   opacity:0;
   transition:.8s;
@@ -94,19 +86,19 @@ body{
 }
 
 .envelope.open .letter{
-  top:-140px;
+  top:-150px;
   opacity:1;
 }
 
-/* 🔘 Nút */
+/* 🔘 Button */
 button{
   position:absolute;
   top:60%;
   left:50%;
   transform:translateX(-50%);
-  padding:10px 30px;
+  padding:12px 34px;
   border:none;
-  border-radius:25px;
+  border-radius:30px;
   background:#ff4d6d;
   color:white;
   font-size:18px;
@@ -114,7 +106,7 @@ button{
   z-index:10;
 }
 
-/* 🌷 Vườn tulip */
+/* 🌷 Tulip Garden */
 .garden{
   position:absolute;
   bottom:0;
@@ -123,13 +115,13 @@ button{
   display:flex;
   justify-content:center;
   align-items:flex-end;
-  gap:10px;
+  gap:18px;
 }
 
 .tulip{
   position:relative;
-  width:40px;
-  height:120px;
+  width:50px;
+  height:150px;
 }
 
 .stem{
@@ -137,45 +129,61 @@ button{
   bottom:0;
   left:50%;
   width:6px;
-  height:70px;
+  height:90px;
   background:#2d6a4f;
   transform:translateX(-50%);
 }
 
+.leaf{
+  position:absolute;
+  width:25px;
+  height:40px;
+  background:#40916c;
+  border-radius:0 100% 0 100%;
+  bottom:30px;
+}
+
+.leaf.left{left:0;transform:rotate(-20deg)}
+.leaf.right{right:0;transform:rotate(20deg)}
+
 .flower{
   position:absolute;
-  bottom:60px;
+  bottom:80px;
   left:50%;
-  width:30px;
-  height:30px;
-  background:#ff4d6d;
-  border-radius:50% 50% 0 0;
   transform:translateX(-50%);
 }
 
-.flower::before,
-.flower::after{
-  content:'';
+.petal{
   position:absolute;
-  width:30px;
-  height:30px;
-  background:#ff758f;
+  width:28px;
+  height:35px;
+  background:#ff4d6d;
   border-radius:50% 50% 0 0;
 }
 
-.flower::before{ left:-15px }
-.flower::after{ right:-15px }
+.petal.left{left:-18px;background:#ff758f}
+.petal.right{left:18px;background:#ff758f}
+.petal.center{left:0;background:#ff4d6d}
 
+.center-dot{
+  position:absolute;
+  top:10px;
+  left:50%;
+  width:8px;
+  height:8px;
+  background:#ffd166;
+  border-radius:50%;
+  transform:translateX(-50%);
+}
 </style>
 </head>
 
 <body>
 
-<!-- ✉️ Phong thư -->
 <div class="envelope" id="env">
   <div class="lid"></div>
   <div class="letter">
-    <h3>Happy Valentine’s Day 💖</h3>
+    <h3>Happy Valentine’s Day 💖</h3><br>
     <p>Anh yêu em rất nhiều 💕</p>
     <p>Cảm ơn em đã đến bên anh 🥰</p>
   </div>
@@ -183,18 +191,47 @@ button{
 
 <button onclick="openLetter()">Open</button>
 
-<!-- 🌷 Vườn tulip -->
+<!-- 🌷 Garden -->
 <div class="garden">
-  <div class="tulip"><div class="stem"></div><div class="flower"></div></div>
-  <div class="tulip"><div class="stem"></div><div class="flower"></div></div>
-  <div class="tulip"><div class="stem"></div><div class="flower"></div></div>
-  <div class="tulip"><div class="stem"></div><div class="flower"></div></div>
-  <div class="tulip"><div class="stem"></div><div class="flower"></div></div>
+  <div class="tulip">
+    <div class="stem"></div>
+    <div class="leaf left"></div>
+    <div class="leaf right"></div>
+    <div class="flower">
+      <div class="petal left"></div>
+      <div class="petal center"></div>
+      <div class="petal right"></div>
+      <div class="center-dot"></div>
+    </div>
+  </div>
+
+  <div class="tulip">
+    <div class="stem"></div>
+    <div class="leaf left"></div>
+    <div class="leaf right"></div>
+    <div class="flower">
+      <div class="petal left"></div>
+      <div class="petal center"></div>
+      <div class="petal right"></div>
+      <div class="center-dot"></div>
+    </div>
+  </div>
+
+  <div class="tulip">
+    <div class="stem"></div>
+    <div class="leaf left"></div>
+    <div class="leaf right"></div>
+    <div class="flower">
+      <div class="petal left"></div>
+      <div class="petal center"></div>
+      <div class="petal right"></div>
+      <div class="center-dot"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ⭐ Sao */
-for(let i=0;i<50;i++){
+for(let i=0;i<60;i++){
   let s=document.createElement('div');
   s.className='star';
   s.style.left=Math.random()*100+'vw';
@@ -202,7 +239,6 @@ for(let i=0;i<50;i++){
   document.body.appendChild(s);
 }
 
-/* ❤️ Trái tim */
 setInterval(()=>{
   let h=document.createElement('div');
   h.className='heart';
@@ -213,7 +249,6 @@ setInterval(()=>{
   setTimeout(()=>h.remove(),8000);
 },400);
 
-/* ✉️ Open */
 function openLetter(){
   document.getElementById('env').classList.add('open');
 }
