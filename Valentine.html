@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Valentine 💖</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #ff9a9e, #fad0c4);
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 2.5em;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            background: #ff4b5c;
+            color: white;
+        }
+
+        button:hover {
+            background: #ff1e38;
+        }
+
+        #message {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>💖 Gửi em yêu 💖</h1>
+        <p>Valentine này anh không có gì nhiều…</p>
+        <p>chỉ có một trái tim luôn hướng về em 🥰</p>
+
+        <button onclick="showLove()">Bấm vô đây nè 💌</button>
+
+        <div id="message">
+            💕 Anh yêu em rất nhiều 💕<br>
+            Cảm ơn em đã đến bên anh ❤️
+        </div>
+    </div>
+
+    <script>
+        function showLove() {
+            document.getElementById("message").style.display = "block";
+        }
+    </script>
+</body>
+</html>
