@@ -1,71 +1,144 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Valentine 💖</title>
-    <style>
-        body {
-            background: linear-gradient(to right, #ff9a9e, #fad0c4);
-            font-family: Arial, sans-serif;
-            text-align: center;
-            color: #fff;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine 💌</title>
 
-        .card {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
 
-        h1 {
-            font-size: 2.5em;
-        }
+body {
+    overflow: hidden;
+    background: linear-gradient(to top right, #ff9a9e, #fad0c4);
+}
 
-        button {
-            margin-top: 20px;
-            padding: 12px 25px;
-            font-size: 18px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            background: #ff4b5c;
-            color: white;
-        }
+/* ===== HEARTS ===== */
+.heart {
+    position: fixed;
+    bottom: -20px;
+    color: rgba(255, 0, 80, 0.7);
+    font-size: 20px;
+    animation: floatUp 6s linear infinite;
+}
 
-        button:hover {
-            background: #ff1e38;
-        }
+@keyframes floatUp {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-120vh);
+        opacity: 0;
+    }
+}
 
-        #message {
-            margin-top: 20px;
-            font-size: 1.5em;
-            display: none;
-        }
-    </style>
+/* ===== SCREENS ===== */
+.screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    transition: opacity 1s ease;
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ===== LETTER ===== */
+.letter {
+    background: white;
+    width: 260px;
+    height: 180px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    animation: pulse 2s infinite;
+}
+
+.letter span {
+    font-size: 50px;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* ===== LOVE SCREEN ===== */
+h1 {
+    color: white;
+    font-size: 2.5em;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+p {
+    color: white;
+    font-size: 1.3em;
+    text-align: center;
+    max-width: 300px;
+}
+</style>
 </head>
+
 <body>
-    <div class="card">
-        <h1>💖 Gửi em yêu 💖</h1>
-        <p>Valentine này anh không có gì nhiều…</p>
-        <p>chỉ có một trái tim luôn hướng về em 🥰</p>
 
-        <button onclick="showLove()">Bấm vô đây nè 💌</button>
-
-        <div id="message">
-            💕 Anh yêu em rất nhiều 💕<br>
-            Cảm ơn em đã đến bên anh ❤️
-        </div>
+<!-- SCREEN 1 -->
+<div class="screen" id="screen1">
+    <h1>Có thư cho em nè 💌</h1>
+    <div class="letter" onclick="openLetter()">
+        <span>💖</span>
     </div>
+    <p>(Bấm vào lá thư nha)</p>
+</div>
 
-    <script>
-        function showLove() {
-            document.getElementById("message").style.display = "block";
-        }
-    </script>
+<!-- SCREEN 2 -->
+<div class="screen hidden" id="screen2">
+    <h1>💘 Anh yêu em 💘</h1>
+    <p>
+        Valentine này anh không có gì nhiều,<br>
+        chỉ có một trái tim luôn hướng về em 🥰<br><br>
+        Cảm ơn em vì đã đến bên anh ❤️
+    </p>
+</div>
+
+<script>
+/* HEART GENERATOR */
+setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (15 + Math.random() * 20) + "px";
+    heart.style.animationDuration = (4 + Math.random() * 4) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+        heart.remove();
+    }, 8000);
+}, 300);
+
+/* TRANSITION */
+function openLetter() {
+    document.getElementById("screen1").classList.add("hidden");
+    document.getElementById("screen2").classList.remove("hidden");
+}
+</script>
+
 </body>
 </html>
