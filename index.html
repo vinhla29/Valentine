@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine's Gift 💖</title>
+<title>Valentine's Day 💖</title>
 <style>
     :root {
         --pink-main: #ff4d6d;
@@ -14,7 +14,7 @@
 
     body {
         height: 100vh;
-        /* Quay lại phông cũ lãng mạn */
+        /* Phông tối lãng mạn */
         background: radial-gradient(circle at top, #1b1b3a, #050505);
         overflow: hidden;
         display: flex;
@@ -22,7 +22,7 @@
         align-items: center;
     }
 
-    /* ⭐ Sao đêm lấp lánh */
+    /* ⭐ Sao đêm */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
 
@@ -33,6 +33,7 @@
         height: 200px;
         z-index: 100;
         perspective: 1000px;
+        margin-top: -50px; /* Đẩy phong bì lên một chút */
     }
 
     .envelope {
@@ -43,7 +44,7 @@
         box-shadow: 0 15px 35px rgba(0,0,0,0.5);
     }
 
-    /* Thân phong bì (Mặt trước che thư) */
+    /* Thân phong bì mặt trước */
     .envelope::after {
         content: "";
         position: absolute;
@@ -81,10 +82,10 @@
         z-index: 1;
     }
 
-    /* 📜 Bức thư - Đã đẩy lên CAO HẲN */
+    /* 📜 Bức thư trồi lên CAO */
     .letter {
         position: absolute;
-        bottom: 10px; /* Ban đầu giấu kín */
+        bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
@@ -99,19 +100,15 @@
     }
 
     .envelope.open .letter {
-        /* Đẩy lên cao để không bị che bởi nắp và thân */
-        transform: translate(-50%, -180px); 
-        height: auto;
+        transform: translate(-50%, -190px); /* Bay lên cao hẳn */
         z-index: 15;
     }
-
-    .letter h3 { margin-bottom: 10px; border-bottom: 1px solid #ffe5ec; padding-bottom: 5px; }
 
     /* 🔘 Button */
     .open-btn {
         position: absolute;
-        top: 65%;
-        padding: 15px 40px;
+        bottom: 20%;
+        padding: 12px 35px;
         background: var(--pink-main);
         color: white;
         border: none;
@@ -124,11 +121,11 @@
     }
     .open-btn:hover { transform: scale(1.1); background: var(--pink-light); }
 
-    /* 🌷 Vườn Tulip chân thật */
+    /* 🌷 Vườn Tulip */
     .garden {
         position: absolute;
         bottom: 0; width: 100%;
-        height: 350px;
+        height: 200px; /* Giảm chiều cao tổng thể của vườn */
         display: flex;
         justify-content: center;
         align-items: flex-end;
@@ -137,7 +134,7 @@
 
     .tulip {
         position: relative;
-        margin: 0 -10px;
+        margin: 0 -12px;
         display: flex; flex-direction: column; align-items: center;
         animation: sway 4s ease-in-out infinite alternate;
         transform-origin: bottom center;
@@ -146,7 +143,7 @@
     @keyframes sway { from {transform: rotate(-1.5deg)} to {transform: rotate(1.5deg)} }
 
     .flower {
-        width: 38px; height: 45px;
+        width: 32px; height: 38px;
         position: relative; z-index: 25;
     }
 
@@ -154,31 +151,26 @@
         position: absolute;
         background: var(--pink-main);
         border-radius: 50% 50% 30% 30% / 80% 80% 20% 20%;
-        box-shadow: inset 2px -5px 10px rgba(0,0,0,0.1);
+        box-shadow: inset 1px -3px 6px rgba(0,0,0,0.1);
     }
-    .petal.main { width: 30px; height: 45px; left: 4px; z-index: 3; }
-    .petal.side { width: 28px; height: 40px; top: 3px; background: var(--pink-light); }
-    .petal.left { left: -6px; transform: rotate(-15deg); z-index: 2; }
-    .petal.right { right: -6px; transform: rotate(15deg); z-index: 2; }
+    .petal.main { width: 26px; height: 38px; left: 3px; z-index: 3; }
+    .petal.side { width: 24px; height: 34px; top: 3px; background: var(--pink-light); }
+    .petal.left { left: -5px; transform: rotate(-15deg); z-index: 2; }
+    .petal.right { right: -5px; transform: rotate(15deg); z-index: 2; }
 
     .stem {
-        width: 5px;
+        width: 4px;
         background: linear-gradient(to right, #1b4332, #2d6a4f, #1b4332);
-        border-radius: 5px;
         z-index: 20;
     }
 
-    /* 🍃 Lá chân thật: Dài, nhọn và mọc từ dưới lên */
+    /* 🍃 Lá chân thật */
     .leaf {
         position: absolute;
         background: linear-gradient(to top, #1b4332, #40916c);
         clip-path: ellipse(15% 50% at 50% 50%);
         transform-origin: bottom center;
         z-index: 18;
-    }
-    .leaf::after { /* Gân lá mờ */
-        content: ""; position: absolute; top: 10%; left: 50%;
-        width: 1px; height: 80%; background: rgba(255,255,255,0.1);
     }
 
     /* ❤️ Tim bay */
@@ -195,7 +187,7 @@
     <div class="envelope" id="env">
         <div class="lid"></div>
         <div class="letter">
-            <h3>Happy Valentine's Day 💖</h3>
+            <h3 style="margin-bottom:10px">Happy Valentine's Day 💖</h3>
             <p>Em là điều tuyệt vời nhất thế giới!</p>
             <p>Cảm ơn em đã đến bên anh 🥰</p>
             <p style="margin-top:5px; font-weight:bold;">Anh yêu em rất nhiều 💕</p>
@@ -208,31 +200,30 @@
 <div class="garden" id="garden"></div>
 
 <script>
-    // Tạo vườn hoa tulip
     const garden = document.getElementById('garden');
-    const flowers = 22;
+    const flowers = 25;
 
     for(let i=0; i<flowers; i++) {
         let t = document.createElement('div');
         t.className = 'tulip';
         
-        let stemH = 110 + Math.random() * 120; // Cao thấp khác nhau cho tự nhiên
+        // GIẢM ĐỘ CAO HOA TULIP: chỉ từ 40px đến 90px
+        let stemH = 40 + Math.random() * 50; 
         t.style.animationDelay = (Math.random() * 4) + 's';
         t.style.zIndex = Math.floor(stemH);
 
         let leafHTML = '';
-        let numLeaves = 2 + Math.floor(Math.random() * 2);
+        let numLeaves = 2;
         for(let j=0; j<numLeaves; j++) {
             let side = j % 2 === 0 ? -1 : 1;
-            let leafH = 80 + Math.random() * 90; // Lá dài chân thật
-            let leafW = 15 + Math.random() * 15;
-            let rotate = side * (20 + Math.random() * 40);
-            let bottomPos = Math.random() * 30; // Mọc từ các vị trí gốc khác nhau
+            let leafH = 50 + Math.random() * 40; 
+            let leafW = 12 + Math.random() * 8;
+            let rotate = side * (25 + Math.random() * 25);
 
             leafHTML += `<div class="leaf" style="
                 width: ${leafW}px; height: ${leafH}px; 
-                bottom: ${bottomPos}px; transform: rotate(${rotate}deg);
-                ${side === -1 ? 'left: -12px' : 'right: -12px'};
+                bottom: 0; transform: rotate(${rotate}deg);
+                ${side === -1 ? 'left: -8px' : 'right: -8px'};
             "></div>`;
         }
 
@@ -248,26 +239,24 @@
         garden.appendChild(t);
     }
 
-    // Sao đêm
-    for(let i=0; i<80; i++) {
+    for(let i=0; i<60; i++) {
         let s = document.createElement('div');
         s.className = 'star';
-        s.style.width = s.style.height = Math.random() * 3 + 'px';
+        s.style.width = s.style.height = Math.random() * 2 + 'px';
         s.style.left = Math.random() * 100 + 'vw';
         s.style.top = Math.random() * 100 + 'vh';
         document.body.appendChild(s);
     }
 
-    // Tim bay
     setInterval(() => {
         let h = document.createElement('div');
         h.className = 'heart';
         h.innerHTML = '❤️';
         h.style.left = Math.random() * 100 + 'vw';
-        h.style.fontSize = Math.random() * 15 + 15 + 'px';
+        h.style.fontSize = Math.random() * 10 + 15 + 'px';
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 6000);
-    }, 500);
+    }, 600);
 
     function openLetter() {
         document.getElementById('env').classList.add('open');
