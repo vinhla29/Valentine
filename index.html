@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine's Super Fix 💖</title>
+<title>Valentine's Love 💖</title>
 <style>
     :root {
         --pink-main: #ff4d6d;
@@ -23,7 +23,7 @@
         align-items: center;
     }
 
-    /* ⭐ Sao đêm & Tim bay */
+    /* ⭐ Sao & Tim nền */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; }
@@ -35,11 +35,11 @@
     /* ✉️ Envelope Wrapper */
     .envelope-wrapper {
         position: relative;
-        width: 320px;
-        height: 210px;
-        z-index: 100; /* Đảm bảo cụm này nằm trên garden */
+        width: 300px;
+        height: 200px;
+        z-index: 100;
         perspective: 1000px;
-        margin-top: 80px;
+        margin-top: 50px; /* Căn chỉnh vị trí */
     }
 
     .envelope {
@@ -51,68 +51,71 @@
         z-index: 10;
     }
 
-    /* Thân phong bì mặt trước - Quan trọng nhất là z-index */
+    /* Mặt trước phong bì */
     .envelope::after {
         content: ""; position: absolute; bottom: 0; 
-        z-index: 30; /* Luôn nằm trên bức thư lúc chưa mở */
-        border-left: 160px solid transparent; border-right: 160px solid transparent;
-        border-bottom: 110px solid #ffffff; border-radius: 0 0 10px 10px;
-        pointer-events: none;
+        width: 100%; height: 100%;
+        z-index: 30; /* Nằm trên thư lúc chưa mở */
+        /* Dùng clip-path để cắt hình tam giác chuẩn */
+        background: #fff;
+        clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%);
+        border-radius: 0 0 10px 10px;
     }
 
     /* Nắp phong bì */
     .lid {
         position: absolute; top: 0; left: 0; width: 0; height: 0;
-        border-left: 160px solid transparent; border-right: 160px solid transparent;
-        border-top: 115px solid #ff9eb5;
+        border-left: 150px solid transparent; border-right: 150px solid transparent;
+        border-top: 110px solid #ff9eb5;
         transform-origin: top; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 40; /* Nằm trên cùng khi đóng */
+        z-index: 40; /* Nằm trên cùng */
     }
 
-    /* KHI MỞ: Hạ thấp nắp để không đè thư */
     .envelope.open .lid { 
         transform: rotateX(180deg); 
-        z-index: 5; 
+        z-index: 5; /* Khi mở thì chui xuống dưới */
     }
 
-    /* 📜 Bức thư - Đã sửa lỗi bị đè */
+    /* 📜 Bức thư - SỬA LỖI HIỂN THỊ */
     .letter {
         position: absolute; 
-        bottom: 10px; 
+        bottom: 0; 
         left: 50%; 
         transform: translateX(-50%);
         width: 90%; 
         background: #fff; 
-        padding: 25px 15px; 
+        padding: 20px 15px; 
         border-radius: 5px;
         color: #c9184a; 
         text-align: center; 
-        transition: transform 0.8s 0.3s, z-index 0s 0.4s; 
-        z-index: 20; /* Nằm dưới lớp nắp (40) và thân trước (30) */
-        background-image: repeating-linear-gradient(white, white 24px, #ffe5ec 25px);
+        transition: transform 0.8s 0.3s, z-index 0s 0.3s; 
+        z-index: 20; /* Ban đầu nằm trong phong bì */
+        background-image: repeating-linear-gradient(white, white 24px, #fde2e8 25px);
         line-height: 25px; 
         box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
 
-    /* KHI MỞ: Đẩy thư lên cao hẳn và cho nó z-index lớn nhất */
+    /* Khi mở: Bay lên cao và nằm trên tất cả */
     .envelope.open .letter { 
-        transform: translate(-50%, -260px); /* Bay cao lên */
-        z-index: 1000; /* Nhảy lên trên tất cả các thành phần phong bì */
+        transform: translate(-50%, -240px); 
+        z-index: 999; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-    /* 🖼️ Memory Photos - Ở LẠI XUNG QUANH */
-    .photo-memory {
+    /* 🖼️ POLAROID PHOTOS */
+    .photo-card {
         position: absolute;
-        width: 110px; height: 130px;
+        width: 100px; 
         background: white;
-        padding: 5px; padding-bottom: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        border-radius: 3px;
-        z-index: 50; /* Nằm dưới thư lúc mở (1000) nhưng trên phong bì */
+        padding: 5px; padding-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        transform-origin: center;
         opacity: 0;
-        transition: 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        z-index: 50; /* Nằm dưới thư (999) nhưng trên nền */
+        transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        pointer-events: none;
     }
-    .photo-memory img { width: 100%; height: 85%; object-fit: cover; border-radius: 2px; }
+    .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
 
     /* 🔘 Button */
     .open-btn {
@@ -120,31 +123,31 @@
         background: var(--pink-main); color: white;
         border: none; border-radius: 50px;
         font-weight: bold; font-size: 1.1rem;
-        cursor: pointer; z-index: 500;
+        cursor: pointer; z-index: 200;
         box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
         transition: 0.3s;
     }
-    .open-btn:hover { transform: scale(1.1); }
+    .open-btn:hover { transform: scale(1.1); background: var(--pink-light); }
 
-    /* 🌷 Garden 3 cây Tulip */
-    .garden { position: absolute; bottom: 0; width: 100%; height: 100px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; }
-    .tulip { position: relative; display: flex; flex-direction: column; align-items: center; animation: sway 4s infinite alternate; transform-origin: bottom; }
+    /* 🌷 Garden */
+    .garden { position: absolute; bottom: 0; width: 100%; height: 130px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; }
+    .tulip { position: relative; animation: sway 4s infinite alternate; transform-origin: bottom; display: flex; flex-direction: column; align-items: center; }
     @keyframes sway { from {transform: rotate(-2deg)} to {transform: rotate(2deg)} }
-    .stem { width: 6px; height: 50px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 5px; }
-    .flower { width: 38px; height: 45px; position: relative; z-index: 25; }
+    .stem { width: 6px; height: 60px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 5px; }
+    .flower { width: 40px; height: 48px; position: relative; z-index: 25; }
     .petal { position: absolute; background: var(--pink-main); border-radius: 50% 50% 30% 30% / 80% 80% 20% 20%; }
-    .petal.main { width: 30px; height: 45px; left: 4px; z-index: 3; box-shadow: inset 2px -4px 8px rgba(0,0,0,0.15); }
-    .petal.side { width: 28px; height: 40px; top: 3px; background: var(--pink-light); }
-    .petal.left { left: -5px; transform: rotate(-15deg); z-index: 2; }
-    .petal.right { right: -5px; transform: rotate(15deg); z-index: 2; }
-    
-    .leaf { position: absolute; background: linear-gradient(to top, var(--green-dark), #40916c); clip-path: ellipse(15% 50% at 50% 50%); width: 25px; height: 80px; bottom: 5px; transform-origin: bottom center; }
-    .leaf.left { left: -22px; transform: rotate(-35deg) scaleX(-1); }
-    .leaf.right { right: -22px; transform: rotate(35deg); }
+    .petal.main { width: 32px; height: 48px; left: 4px; z-index: 3; box-shadow: inset 2px -4px 8px rgba(0,0,0,0.15); }
+    .petal.side { width: 30px; height: 44px; top: 3px; background: var(--pink-light); }
+    .petal.left { left: -6px; transform: rotate(-15deg); z-index: 2; }
+    .petal.right { right: -6px; transform: rotate(15deg); z-index: 2; }
+    .leaf { position: absolute; background: linear-gradient(to top, var(--green-dark), #40916c); clip-path: ellipse(15% 50% at 50% 50%); width: 25px; height: 85px; bottom: 5px; transform-origin: bottom center; }
+    .leaf.left { left: -20px; transform: rotate(-35deg) scaleX(-1); }
+    .leaf.right { right: -20px; transform: rotate(35deg); }
 
-    @keyframes photoFloat {
-        0% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)); }
-        100% { transform: translate(calc(var(--tx) + 5px), calc(var(--ty) - 5px)) rotate(calc(var(--tr) + 3deg)); }
+    /* Animation đung đưa cho ảnh */
+    @keyframes floatInfo {
+        0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); }
+        100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); }
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
@@ -155,10 +158,10 @@
     <div class="envelope" id="env">
         <div class="lid"></div>
         <div class="letter">
-            <h3 style="margin-bottom: 25px;">Happy Valentine's 💖</h3>
+            <h3 style="margin-bottom: 20px;">Happy Valentine's 💖</h3>
             <p>Em là điều tuyệt vời nhất!</p>
             <p>Cảm ơn em đã ở bên anh 🥰</p>
-            <p style="font-weight:bold;">Anh yêu em rất nhiều 💕</p>
+            <p style="font-weight:bold; margin-top: 10px;">Yêu em rất nhiều 💕</p>
         </div>
     </div>
 </div>
@@ -167,23 +170,26 @@
 
 <div class="garden">
     <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-    <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 60px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+    <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 70px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
     <div class="tulip" style="animation-delay: -2s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
 </div>
 
 <script>
-    // 1. Link ảnh của ông bà (Thay link thật ở đây nhé)
-    const photoUrls = [
-        "https://via.placeholder.com/150x200?text=Us+1",
-        "https://via.placeholder.com/150x200?text=Us+2",
-        "https://via.placeholder.com/150x200?text=Us+3",
-        "https://via.placeholder.com/150x200?text=Us+4",
-        "https://via.placeholder.com/150x200?text=Us+5",
-        "https://via.placeholder.com/150x200?text=Us+6"
+    // 🔥 1. DANH SÁCH ẢNH (Ông thay link ảnh thật vào đây, càng nhiều càng đẹp)
+    // Tui để sẵn 8 tấm placeholder
+    const photos = [
+        "https://via.placeholder.com/150x150/ffb3c1/fff?text=Anh+1",
+        "https://via.placeholder.com/150x150/ffafcc/fff?text=Anh+2",
+        "https://via.placeholder.com/150x150/ffc8dd/fff?text=Anh+3",
+        "https://via.placeholder.com/150x150/cdb4db/fff?text=Anh+4",
+        "https://via.placeholder.com/150x150/a2d2ff/fff?text=Anh+5",
+        "https://via.placeholder.com/150x150/bde0fe/fff?text=Anh+6",
+        "https://via.placeholder.com/150x150/8ecae6/fff?text=Anh+7",
+        "https://via.placeholder.com/150x150/219ebc/fff?text=Anh+8"
     ];
 
-    // 2. Stars & Hearts
-    for(let i=0; i<80; i++) {
+    // 2. Decor Stars & Hearts
+    for(let i=0; i<60; i++) {
         let s = document.createElement('div');
         s.className = 'star';
         s.style.width = s.style.height = Math.random() * 2 + 'px';
@@ -196,46 +202,56 @@
         h.className = 'bg-heart';
         h.innerHTML = '❤️';
         h.style.left = Math.random() * 100 + 'vw';
-        h.style.fontSize = Math.random() * 15 + 15 + 'px';
+        h.style.fontSize = Math.random() * 15 + 10 + 'px';
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 6000);
-    }, 400);
+    }, 500);
 
-    // 3. Open Letter & Burst Photos
+    // 3. Xử lý mở thư và bung ảnh
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
 
-        // Bung ảnh và giữ lại
-        photoUrls.forEach((url, index) => {
-            const photo = document.createElement('div');
-            photo.className = 'photo-memory';
-            photo.innerHTML = `<img src="${url}" alt="Memory"><div style="font-size: 8px; text-align: center; margin-top: 5px; color: #999;">Together ❤️</div>`;
+        // Bung ảnh ra xung quanh
+        const total = photos.length;
+        const radius = 220; // Độ rộng của vòng tròn ảnh (tăng nếu muốn rộng hơn)
+
+        photos.forEach((url, i) => {
+            let img = document.createElement('div');
+            img.className = 'photo-card';
+            img.innerHTML = `<img src="${url}">`;
             
-            photo.style.left = '50%';
-            photo.style.top = '50%';
-            photo.style.transform = 'translate(-50%, -50%) scale(0)';
-            document.body.appendChild(photo);
+            // Đặt vị trí xuất phát ở giữa màn hình
+            img.style.left = '50%';
+            img.style.top = '40%';
+            img.style.transform = 'translate(-50%, -50%) scale(0)';
+            document.body.appendChild(img);
 
-            const angle = (index / photoUrls.length) * Math.PI * 2;
-            const dist = 280 + Math.random() * 40; // Bay xa ra chút để không đè thư
-            const tx = Math.cos(angle) * dist;
-            const ty = Math.sin(angle) * dist - 100;
-            const tr = (Math.random() - 0.5) * 40;
+            // Tính toán vị trí đích (theo hình vòng tròn)
+            // Góc bắt đầu từ -180 độ đến 0 độ (nửa vòng tròn trên) hoặc cả vòng tròn
+            let angle = (i / total) * Math.PI * 2; // Xếp thành vòng tròn
+            let x = Math.cos(angle) * radius;
+            let y = Math.sin(angle) * radius - 50; // Trừ đi một chút để ảnh bay cao hơn
 
-            photo.style.setProperty('--tx', `${tx - 55}px`);
-            photo.style.setProperty('--ty', `${ty - 65}px`);
-            photo.style.setProperty('--tr', `${tr}deg`);
+            let randomRot = (Math.random() - 0.5) * 30; // Xoay ngẫu nhiên
 
+            // Set biến CSS để dùng cho keyframes
+            img.style.setProperty('--x', `calc(-50% + ${x}px)`);
+            img.style.setProperty('--y', `calc(-50% + ${y}px)`);
+            img.style.setProperty('--r', `${randomRot}deg`);
+
+            // Animation bay ra
             setTimeout(() => {
-                photo.style.opacity = '1';
-                photo.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1) rotate(${tr}deg)`;
+                img.style.opacity = '1';
+                img.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${randomRot}deg)`;
                 
+                // Sau khi bay ra xong thì đung đưa
                 setTimeout(() => {
-                    photo.style.animation = `photoFloat ${3 + Math.random()}s ease-in-out infinite alternate`;
-                }, 2000);
-            }, 200 + index * 150);
+                    img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
+                }, 1500);
+
+            }, i * 150); // Delay từng tấm để bay lần lượt
         });
     }
 </script>
