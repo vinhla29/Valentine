@@ -138,17 +138,17 @@
     .stem { width: 8px; height: 80px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 10px; z-index: 20;}
     
     /* Lá cải tiến */
-    .leaf {
-        position: absolute;
-        background: linear-gradient(to top, var(--green-dark), #4d9a78);
-        clip-path: ellipse(15% 50% at 50% 50%);
-        width: 30px; height: 100px;
-        bottom: 10px;
-        transform-origin: bottom center;
-        filter: drop-shadow(3px 5px 5px rgba(0,0,0,0.3));
-    }
-    .leaf.left { left: -25px; transform: rotate(-40deg) scaleX(-1); }
-    .leaf.right { right: -25px; transform: rotate(40deg); }
+    .leaf{
+  position:absolute;
+  width:20px;
+  height:34px;
+  background:#40916c;
+  border-radius:0 100% 0 100%;
+  bottom:24px;
+}
+
+.leaf.left{left:-6px;transform:rotate(-20deg)}
+.leaf.right{right:-6px;transform:rotate(20deg)}
 
     /* 🎇 Heart Explosion Effect */
     .confetti {
