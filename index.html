@@ -10,172 +10,266 @@
         --pink-light: #ff758f;
         --green-dark: #1b4332;
         --green-medium: #2d6a4f;
+        --bg-color: #0b0b1a;
     }
 
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Quicksand', sans-serif}
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Quicksand', 'Segoe UI', sans-serif}
 
     body {
         height: 100vh;
         background: radial-gradient(circle at top, #1b1b3a, #050505);
         overflow: hidden;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: 2s ease-in-out; /* Để chuyển cảnh mượt */
     }
 
-    /* ⭐ Sao & Tim nền */
+    /* ⭐ Background Stars & Hearts */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
-    .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; }
+
+    .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
     @keyframes floatUp {
-        0% { transform: translateY(110vh) scale(0.5); opacity: 1; }
-        100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        0% { transform: translateY(110vh) scale(0.5) rotate(0); opacity: 1; }
+        100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
     }
 
-    /* ✉️ Envelope & Letter */
-    #main-scene { transition: 1.5s opacity ease; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-    .envelope-wrapper { position: relative; width: 320px; height: 210px; z-index: 100; perspective: 1000px; margin-top: -50px; }
-    .envelope { position: relative; width: 100%; height: 100%; background: #fff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-    .envelope::after { content: ""; position: absolute; bottom: 0; z-index: 10; border-left: 160px solid transparent; border-right: 160px solid transparent; border-bottom: 110px solid #ffffff; border-radius: 0 0 10px 10px; }
-    .lid { position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 115px solid #ff9eb5; transform-origin: top; transition: 0.8s; z-index: 11; }
+    /* ✉️ Envelope Hoành Tráng */
+    .envelope-wrapper {
+        position: relative;
+        width: 350px;
+        height: 230px;
+        z-index: 100;
+        perspective: 1500px;
+        margin-top: -50px;
+        transition: transform 0.5s;
+    }
+
+    .envelope {
+        position: relative;
+        width: 100%; height: 100%;
+        background: #ffffff;
+        border-radius: 0 0 15px 15px;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    }
+
+    .envelope::after {
+        content: ""; position: absolute; bottom: 0; z-index: 10;
+        border-left: 175px solid transparent; border-right: 175px solid transparent;
+        border-bottom: 130px solid #ffffff; border-radius: 0 0 15px 15px;
+    }
+
+    .envelope::before {
+        content: ""; position: absolute; top: 0; z-index: 9;
+        border-left: 175px solid #f5f5f5; border-right: 175px solid #f5f5f5;
+        border-top: 115px solid transparent;
+    }
+
+    .lid {
+        position: absolute; top: 0; left: 0; width: 0; height: 0;
+        border-left: 175px solid transparent; border-right: 175px solid transparent;
+        border-top: 135px solid #ff9eb5;
+        transform-origin: top; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 11;
+    }
+
     .envelope.open .lid { transform: rotateX(180deg); z-index: 1; }
-    
-    .letter { 
-        position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); 
-        width: 90%; background: #fff; padding: 25px 15px; border-radius: 5px; 
-        color: #c9184a; text-align: center; transition: 0.8s 0.3s; z-index: 5;
-        background-image: repeating-linear-gradient(white, white 24px, #ffe5ec 25px);
-        line-height: 25px;
+
+    /* 📜 Thư Giấy Tay (Lines & Typing) */
+    .letter {
+        position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+        width: 92%; min-height: 200px;
+        background: #fff;
+        background-image: repeating-linear-gradient(white, white 27px, #ffe5ec 28px);
+        padding: 35px 25px;
+        border-radius: 8px;
+        color: #c9184a;
+        transition: transform 1s 0.4s, box-shadow 1s;
+        z-index: 5;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        font-size: 1.1rem;
+        line-height: 28px;
     }
-    .envelope.open .letter { transform: translate(-50%, -190px); z-index: 15; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
 
-    /* 🔘 Button */
-    .open-btn { margin-top: 60px; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; z-index: 200; box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4); }
+    .envelope.open .letter { transform: translate(-50%, -220px); z-index: 15; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
 
-    /* 🌷 Garden 3 cây */
-    .garden { position: absolute; bottom: 0; width: 100%; height: 150px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; }
-    .tulip { position: relative; display: flex; flex-direction: column; align-items: center; animation: sway 4s infinite alternate; transform-origin: bottom; }
-    @keyframes sway { from {transform: rotate(-2deg)} to {transform: rotate(2deg)} }
-    .stem { width: 6px; height: 60px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 5px; }
-    .flower { width: 38px; height: 45px; position: relative; z-index: 25; }
+    /* 🔘 Nút Bấm Hoành Tráng */
+    .open-btn {
+        margin-top: 80px;
+        padding: 18px 50px;
+        background: linear-gradient(45deg, var(--pink-main), var(--pink-light));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        font-weight: bold;
+        font-size: 1.2rem;
+        cursor: pointer;
+        z-index: 200;
+        box-shadow: 0 15px 30px rgba(255, 77, 109, 0.5);
+        transition: 0.3s;
+    }
+    .open-btn:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 20px 40px rgba(255, 77, 109, 0.6); }
+
+    /* 🌷 Vườn Tulip 3 Cây Nghệ Thuật */
+    .garden {
+        position: absolute; bottom: 0; width: 100%;
+        height: 220px;
+        display: flex; justify-content: center; align-items: flex-end;
+        gap: 80px;
+    }
+
+    .tulip {
+        position: relative;
+        display: flex; flex-direction: column; align-items: center;
+        animation: sway 5s ease-in-out infinite alternate;
+        transform-origin: bottom center;
+    }
+
+    @keyframes sway { from {transform: rotate(-3deg)} to {transform: rotate(3deg)} }
+
+    .flower { width: 45px; height: 55px; position: relative; z-index: 25; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));}
     .petal { position: absolute; background: var(--pink-main); border-radius: 50% 50% 30% 30% / 80% 80% 20% 20%; }
-    .petal.main { width: 30px; height: 45px; left: 4px; z-index: 3; box-shadow: inset 2px -4px 8px rgba(0,0,0,0.1); }
-    .petal.side { width: 28px; height: 40px; top: 3px; background: var(--pink-light); }
-    .petal.left { left: -5px; transform: rotate(-15deg); z-index: 2; }
-    .petal.right { right: -5px; transform: rotate(15deg); z-index: 2; }
-    .leaf { position: absolute; background: linear-gradient(to top, var(--green-dark), #40916c); clip-path: ellipse(15% 50% at 50% 50%); width: 20px; height: 70px; bottom: 5px; transform-origin: bottom center; }
-    .leaf.left { left: -15px; transform: rotate(-35deg); } .leaf.right { right: -15px; transform: rotate(35deg); }
+    .petal.main { width: 36px; height: 55px; left: 4.5px; z-index: 3; box-shadow: inset 3px -6px 12px rgba(0,0,0,0.2); }
+    .petal.side { width: 34px; height: 50px; top: 4px; background: var(--pink-light); }
+    .petal.left { left: -7px; transform: rotate(-18deg); z-index: 2; }
+    .petal.right { right: -7px; transform: rotate(18deg); z-index: 2; }
 
-    /* 🖼️ Album Scene (Mặc định ẩn) */
-    #album-scene {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.9);
-        display: none; flex-direction: column; justify-content: center; align-items: center;
-        z-index: 1000; opacity: 0; transition: 2s;
+    .stem { width: 8px; height: 80px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 10px; z-index: 20;}
+    
+    /* Lá cải tiến */
+    .leaf {
+        position: absolute;
+        background: linear-gradient(to top, var(--green-dark), #4d9a78);
+        clip-path: ellipse(15% 50% at 50% 50%);
+        width: 30px; height: 100px;
+        bottom: 10px;
+        transform-origin: bottom center;
+        filter: drop-shadow(3px 5px 5px rgba(0,0,0,0.3));
     }
-    .photo-frame {
-        width: 80%; max-width: 400px; padding: 15px; background: white;
-        box-shadow: 0 10px 30px rgba(255,255,255,0.2);
-        transform: rotate(-3deg); border-radius: 5px;
+    .leaf.left { left: -25px; transform: rotate(-40deg) scaleX(-1); }
+    .leaf.right { right: -25px; transform: rotate(40deg); }
+
+    /* 🎇 Heart Explosion Effect */
+    .confetti {
+        position: absolute;
+        width: 15px; height: 15px;
+        background: var(--pink-main);
+        clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+        z-index: 1000;
+        pointer-events: none;
     }
-    .photo-frame img { width: 100%; height: auto; border-radius: 3px; }
-    .album-text { color: white; margin-top: 20px; font-size: 1.2rem; font-weight: bold; text-align: center; }
+
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div id="main-scene">
-    <div class="envelope-wrapper">
-        <div class="envelope" id="env">
-            <div class="lid"></div>
-            <div class="letter">
-                <h3 style="margin-bottom: 20px;">Happy Valentine's 💖</h3>
-                <p>Em là điều tuyệt vời nhất!</p>
-                <p>Cảm ơn em đã ở bên anh 🥰</p>
-                <p style="font-weight:bold;">Anh yêu em rất nhiều 💕</p>
-            </div>
+<audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<div class="envelope-wrapper" id="env-wrapper">
+    <div class="envelope" id="env">
+        <div class="lid"></div>
+        <div class="letter">
+            <h3 id="typing-title" style="margin-bottom: 20px; font-size: 1.4rem;"></h3>
+            <p id="typing-text" style="font-weight: 500;"></p>
         </div>
-    </div>
-    <button class="open-btn" id="btn" onclick="openLetter()">Nhấn để mở thư 💌</button>
-    <div class="garden">
-        <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-        <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 80px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-        <div class="tulip" style="animation-delay: -2s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
     </div>
 </div>
 
-<div id="album-scene">
-    <div class="photo-frame">
-        <img id="slideshow" src="https://via.placeholder.com/400x500?text=Anh+Yeu+Em" alt="Kỷ niệm">
-    </div>
-    <div class="album-text">Mãi bên nhau nhé công chúa của anh! 👸❤️</div>
+<button class="open-btn" id="btn" onclick="celebrate()">Nhấn để khám phá món quà 🎁</button>
+
+<div class="garden">
+    <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+    <div class="tulip" style="animation-delay: -1.5s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 110px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+    <div class="tulip" style="animation-delay: -3s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
 </div>
 
 <script>
-    // 1. Tạo sao lấp lánh
-    for(let i=0; i<80; i++) {
+    // 1. Tạo sao đêm
+    for(let i=0; i<100; i++) {
         let s = document.createElement('div');
         s.className = 'star';
-        s.style.width = s.style.height = Math.random() * 2 + 'px';
+        s.style.width = s.style.height = Math.random() * 2.5 + 'px';
         s.style.left = Math.random() * 100 + 'vw';
         s.style.top = Math.random() * 100 + 'vh';
         document.body.appendChild(s);
     }
 
-    // 2. Tạo tim bay liên tục
+    // 2. Tạo trái tim bay nền
     setInterval(() => {
         let h = document.createElement('div');
         h.className = 'bg-heart';
         h.innerHTML = '❤️';
         h.style.left = Math.random() * 100 + 'vw';
-        h.style.fontSize = Math.random() * 15 + 15 + 'px';
+        h.style.fontSize = Math.random() * 20 + 15 + 'px';
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 6000);
-    }, 400);
+    }, 450);
 
-    // 3. Logic mở thư và chuyển cảnh
-    function openLetter() {
+    // 3. Pháo hoa trái tim khi mở
+    function createConfetti() {
+        for(let i=0; i<50; i++) {
+            let c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = '50%';
+            c.style.top = '40%';
+            c.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            document.body.appendChild(c);
+
+            const destinationX = (Math.random() - 0.5) * 800;
+            const destinationY = (Math.random() - 0.5) * 800;
+
+            c.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 2000 + Math.random() * 1000,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+                fill: 'forwards'
+            });
+            setTimeout(() => c.remove(), 3000);
+        }
+    }
+
+    // 4. Chữ chạy Typing Effect
+    const title = "Happy Valentine's Day My Love! 💖";
+    const content = "Gửi em, người con gái tuyệt vời nhất của anh. Cảm ơn em đã xuất hiện và làm thế giới của anh trở nên rực rỡ hơn. Anh yêu em rất nhiều, mãi bên nhau em nhé! 💕";
+
+    function typeWriter(text, elementId, speed, callback) {
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                document.getElementById(elementId).innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            } else if (callback) {
+                callback();
+            }
+        }
+        type();
+    }
+
+    // 5. Hàm kích hoạt toàn bộ
+    function celebrate() {
+
+
+        // Mở bao thư
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
 
-        // SAU 10 GIÂY THÌ CHUYỂN CẢNH
-        setTimeout(() => {
-            switchToAlbum();
-        }, 10000); 
-    }
+        // Bắn pháo hoa
+        createConfetti();
 
-    function switchToAlbum() {
-        const main = document.getElementById('main-scene');
-        const album = document.getElementById('album-scene');
-        
-        main.style.opacity = '0';
+        // Chạy chữ sau khi thư mở xong
         setTimeout(() => {
-            main.style.display = 'none';
-            album.style.display = 'flex';
-            setTimeout(() => {
-                album.style.opacity = '1';
-                startSlideshow(); // Bắt đầu chạy slide ảnh
-            }, 100);
+            typeWriter(title, "typing-title", 80, () => {
+                typeWriter(content, "typing-text", 50);
+            });
         }, 1500);
-    }
-
-    // 4. Slide ảnh (Nếu ông có nhiều ảnh)
-    const images = [
-        "https://via.placeholder.com/400x500?text=Anh+1", 
-        "https://via.placeholder.com/400x500?text=Anh+2",
-        "https://via.placeholder.com/400x500?text=Anh+3"
-    ];
-    let currentIdx = 0;
-    function startSlideshow() {
-        if(images.length > 1) {
-            setInterval(() => {
-                currentIdx = (currentIdx + 1) % images.length;
-                document.getElementById('slideshow').src = images[currentIdx];
-            }, 3000); // 3 giây đổi ảnh một lần
-        }
     }
 </script>
 </body>
