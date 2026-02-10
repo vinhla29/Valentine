@@ -253,24 +253,7 @@
     }
 
     // 5. Hàm kích hoạt toàn bộ
-    function celebrate() {
-
-
-        // Mở bao thư
-        document.getElementById('env').classList.add('open');
-        document.getElementById('btn').style.opacity = '0';
-        setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
-
-        // Bắn pháo hoa
-        createConfetti();
-
-        // Chạy chữ sau khi thư mở xong
-        setTimeout(() => {
-            typeWriter(title, "typing-title", 80, () => {
-                typeWriter(content, "typing-text", 50);
-            });
-        }, 1500);
-    }
+   
 function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
@@ -316,6 +299,24 @@ function openLetter() {
 
             }, i * 150); // Delay từng tấm để bay lần lượt
         });
+    }
+    function celebrate() {
+
+
+        // Mở bao thư
+        document.getElementById('env').classList.add('open');
+        document.getElementById('btn').style.opacity = '0';
+        setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
+
+        // Bắn pháo hoa
+        createConfetti();
+
+        // Chạy chữ sau khi thư mở xong
+        setTimeout(() => {
+            typeWriter(title, "typing-title", 80, () => {
+                typeWriter(content, "typing-text", 50);
+            });
+        }, 1500);
     }
     </script>
 </body>
