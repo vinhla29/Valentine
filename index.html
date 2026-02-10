@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine's Memory Burst 💖</title>
+<title>Valentine's Super Fix 💖</title>
 <style>
     :root {
         --pink-main: #ff4d6d;
@@ -37,9 +37,9 @@
         position: relative;
         width: 320px;
         height: 210px;
-        z-index: 100;
+        z-index: 100; /* Đảm bảo cụm này nằm trên garden */
         perspective: 1000px;
-        margin-top: 50px;
+        margin-top: 80px;
     }
 
     .envelope {
@@ -48,13 +48,16 @@
         background: #ffffff;
         border-radius: 0 0 10px 10px;
         box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        z-index: 10;
     }
 
-    /* Thân phong bì che thư */
+    /* Thân phong bì mặt trước - Quan trọng nhất là z-index */
     .envelope::after {
-        content: ""; position: absolute; bottom: 0; z-index: 20; /* Tăng z-index mặt trước */
+        content: ""; position: absolute; bottom: 0; 
+        z-index: 30; /* Luôn nằm trên bức thư lúc chưa mở */
         border-left: 160px solid transparent; border-right: 160px solid transparent;
         border-bottom: 110px solid #ffffff; border-radius: 0 0 10px 10px;
+        pointer-events: none;
     }
 
     /* Nắp phong bì */
@@ -63,24 +66,38 @@
         border-left: 160px solid transparent; border-right: 160px solid transparent;
         border-top: 115px solid #ff9eb5;
         transform-origin: top; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 25; /* Nằm trên cùng khi đóng */
+        z-index: 40; /* Nằm trên cùng khi đóng */
     }
 
-    .envelope.open .lid { transform: rotateX(180deg); z-index: 5; } /* Khi mở thì chui xuống dưới */
+    /* KHI MỞ: Hạ thấp nắp để không đè thư */
+    .envelope.open .lid { 
+        transform: rotateX(180deg); 
+        z-index: 5; 
+    }
 
-    /* 📜 Bức thư - FIX LỖI HIỂN THỊ */
+    /* 📜 Bức thư - Đã sửa lỗi bị đè */
     .letter {
-        position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
-        width: 90%; background: #fff; padding: 25px 15px; border-radius: 5px;
-        color: #c9184a; text-align: center; transition: 0.8s 0.3s; 
-        z-index: 10; /* Ban đầu nằm dưới lớp mặt trước */
+        position: absolute; 
+        bottom: 10px; 
+        left: 50%; 
+        transform: translateX(-50%);
+        width: 90%; 
+        background: #fff; 
+        padding: 25px 15px; 
+        border-radius: 5px;
+        color: #c9184a; 
+        text-align: center; 
+        transition: transform 0.8s 0.3s, z-index 0s 0.4s; 
+        z-index: 20; /* Nằm dưới lớp nắp (40) và thân trước (30) */
         background-image: repeating-linear-gradient(white, white 24px, #ffe5ec 25px);
-        line-height: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        line-height: 25px; 
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
 
+    /* KHI MỞ: Đẩy thư lên cao hẳn và cho nó z-index lớn nhất */
     .envelope.open .letter { 
-        transform: translate(-50%, -240px); /* Đẩy cao hơn hẳn */
-        z-index: 50; /* Bay lên trên tất cả */
+        transform: translate(-50%, -260px); /* Bay cao lên */
+        z-index: 1000; /* Nhảy lên trên tất cả các thành phần phong bì */
     }
 
     /* 🖼️ Memory Photos - Ở LẠI XUNG QUANH */
@@ -91,27 +108,26 @@
         padding: 5px; padding-bottom: 15px;
         box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         border-radius: 3px;
-        z-index: 40; /* Nằm dưới thư nhma trên phong bì */
+        z-index: 50; /* Nằm dưới thư lúc mở (1000) nhưng trên phong bì */
         opacity: 0;
         transition: 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
     .photo-memory img { width: 100%; height: 85%; object-fit: cover; border-radius: 2px; }
 
     /* 🔘 Button */
     .open-btn {
-        margin-top: 80px; padding: 15px 45px;
+        margin-top: 100px; padding: 15px 45px;
         background: var(--pink-main); color: white;
         border: none; border-radius: 50px;
         font-weight: bold; font-size: 1.1rem;
-        cursor: pointer; z-index: 200;
+        cursor: pointer; z-index: 500;
         box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4);
         transition: 0.3s;
     }
     .open-btn:hover { transform: scale(1.1); }
 
     /* 🌷 Garden 3 cây Tulip */
-    .garden { position: absolute; bottom: 0; width: 100%; height: 120px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; }
+    .garden { position: absolute; bottom: 0; width: 100%; height: 100px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; }
     .tulip { position: relative; display: flex; flex-direction: column; align-items: center; animation: sway 4s infinite alternate; transform-origin: bottom; }
     @keyframes sway { from {transform: rotate(-2deg)} to {transform: rotate(2deg)} }
     .stem { width: 6px; height: 50px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 5px; }
@@ -122,12 +138,10 @@
     .petal.left { left: -5px; transform: rotate(-15deg); z-index: 2; }
     .petal.right { right: -5px; transform: rotate(15deg); z-index: 2; }
     
-    /* Lá mượt & có gân */
     .leaf { position: absolute; background: linear-gradient(to top, var(--green-dark), #40916c); clip-path: ellipse(15% 50% at 50% 50%); width: 25px; height: 80px; bottom: 5px; transform-origin: bottom center; }
     .leaf.left { left: -22px; transform: rotate(-35deg) scaleX(-1); }
     .leaf.right { right: -22px; transform: rotate(35deg); }
 
-    /* Hiệu ứng đung đưa cho ảnh sau khi bay ra */
     @keyframes photoFloat {
         0% { transform: translate(var(--tx), var(--ty)) rotate(var(--tr)); }
         100% { transform: translate(calc(var(--tx) + 5px), calc(var(--ty) - 5px)) rotate(calc(var(--tr) + 3deg)); }
@@ -153,12 +167,12 @@
 
 <div class="garden">
     <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-    <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 70px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+    <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 60px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
     <div class="tulip" style="animation-delay: -2s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
 </div>
 
 <script>
-    // 1. Link ảnh kỷ niệm (Ông thay link ảnh của ông bà vào đây nhé)
+    // 1. Link ảnh của ông bà (Thay link thật ở đây nhé)
     const photoUrls = [
         "https://via.placeholder.com/150x200?text=Us+1",
         "https://via.placeholder.com/150x200?text=Us+2",
@@ -168,7 +182,7 @@
         "https://via.placeholder.com/150x200?text=Us+6"
     ];
 
-    // 2. Sao & Tim nền
+    // 2. Stars & Hearts
     for(let i=0; i<80; i++) {
         let s = document.createElement('div');
         s.className = 'star';
@@ -187,32 +201,29 @@
         setTimeout(() => h.remove(), 6000);
     }, 400);
 
-    // 3. Hàm mở thư và bung ảnh (Ảnh sẽ Ở LẠI)
+    // 3. Open Letter & Burst Photos
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
 
-        // Bung ảnh
+        // Bung ảnh và giữ lại
         photoUrls.forEach((url, index) => {
             const photo = document.createElement('div');
             photo.className = 'photo-memory';
             photo.innerHTML = `<img src="${url}" alt="Memory"><div style="font-size: 8px; text-align: center; margin-top: 5px; color: #999;">Together ❤️</div>`;
             
-            // Xuất phát từ giữa
             photo.style.left = '50%';
             photo.style.top = '50%';
             photo.style.transform = 'translate(-50%, -50%) scale(0)';
             document.body.appendChild(photo);
 
-            // Tính toán vị trí bay ra xung quanh
             const angle = (index / photoUrls.length) * Math.PI * 2;
-            const dist = 260 + Math.random() * 60;
+            const dist = 280 + Math.random() * 40; // Bay xa ra chút để không đè thư
             const tx = Math.cos(angle) * dist;
-            const ty = Math.sin(angle) * dist - 80;
+            const ty = Math.sin(angle) * dist - 100;
             const tr = (Math.random() - 0.5) * 40;
 
-            // Thiết lập biến CSS để dùng cho animation đung đưa sau khi bay xong
             photo.style.setProperty('--tx', `${tx - 55}px`);
             photo.style.setProperty('--ty', `${ty - 65}px`);
             photo.style.setProperty('--tr', `${tr}deg`);
@@ -221,7 +232,6 @@
                 photo.style.opacity = '1';
                 photo.style.transform = `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(1) rotate(${tr}deg)`;
                 
-                // Sau khi bay ra 2s thì bắt đầu đung đưa nhẹ tại chỗ (không mất đi)
                 setTimeout(() => {
                     photo.style.animation = `photoFloat ${3 + Math.random()}s ease-in-out infinite alternate`;
                 }, 2000);
