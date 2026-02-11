@@ -63,12 +63,11 @@
     #cute-cat { position: absolute; left: -180px; bottom: 10px; width: 150px; height: auto; transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
     body.in-scene2 #cute-cat { left: -10px; }
     
-    /* CSS Cập nhật cho hạt tim để có thể Fade out mềm mại */
+    /* CẬP NHẬT TRÁI TIM TẠO CHỮ: Chỉnh size nhỏ lại xíu để nét chữ thanh thoát hơn */
     .mini-heart { 
-        position: absolute; color: var(--pink-main); font-size: 14px; pointer-events: none; z-index: 15; 
-        /* Tách transform và opacity để lúc fade out tim vẫn giữ nguyên vị trí, không bị giật */
+        position: absolute; color: var(--pink-main); font-size: 11px; pointer-events: none; z-index: 15; 
         transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.5s ease; 
-        filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); 
+        filter: drop-shadow(0 0 3px rgba(255, 77, 109, 0.8)); 
         opacity: 1;
     }
 
@@ -178,7 +177,7 @@
         type();
     }
 
-    // --- LOGIC MỞ THƯ VÀ ĐẢO ẢNH ---
+    // --- LOGIC MỞ THƯ ---
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn-open').style.opacity = '0';
@@ -228,7 +227,7 @@
         }, 1200);
     }
 
-    // --- KỊCH BẢN CHỮ DÀNH CHO SCENE 2 ---
+    // --- KỊCH BẢN CHỮ ---
     const storyline = [
         ["Gửi em Nu"],
         ["Ngày hôm nay", "của em thế nào?"],
@@ -246,33 +245,41 @@
         document.getElementById('btn-next-right').style.opacity = '0';
         document.getElementById('btn-next-right').style.pointerEvents = 'none';
         
-        // Đợi 1.5s cho mèo chui ra
         await new Promise(r => setTimeout(r, 1500));
-        
-        // Chạy lần lượt từng câu nói
         for (let lines of storyline) {
             await shootSinglePhrase(lines);
         }
 
-        // Hiện nút đi xuống cảnh 3
         const btnDown = document.getElementById('btn-down-arrow');
         btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
     }
 
-    // Hàm lấy tọa độ điểm từ Canvas dựa trên mảng chữ
+    // --- CẬP NHẬT THUẬT TOÁN TẠO CHỮ CỰC NÉT, RÕ RÀNG ---
     function getTextPoints(lines) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        canvas.width = 1000; canvas.height = 400; // Khung to để chứa chữ dài
+        
+        // Cài font siêu to để lấy viền chữ chuẩn nhất
+        ctx.font = '900 120px Quicksand'; 
+        
+        // Tự động đo chiều ngang để tạo canvas vừa khít chữ
+        let maxW = 0;
+        lines.forEach(line => {
+            let w = ctx.measureText(line).width;
+            if(w > maxW) maxW = w;
+        });
+        
+        canvas.width = maxW + 100; // Thêm lề trái phải
+        canvas.height = lines.length * 150 + 50; 
+        
+        // Phải gán lại font sau khi set size canvas
+        ctx.font = '900 120px Quicksand'; 
         ctx.fillStyle = 'black';
-        ctx.font = '900 65px Quicksand'; 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // Tính toán để căn giữa chữ theo chiều dọc
-        const lineSpacing = 80;
-        const totalHeight = lines.length * lineSpacing;
-        let startY = (canvas.height - totalHeight) / 2 + (lineSpacing / 2);
+        const lineSpacing = 140; // Giãn khoảng cách giữa 2 dòng
+        let startY = (canvas.height - (lines.length - 1) * lineSpacing) / 2;
 
         lines.forEach((line, index) => {
             ctx.fillText(line, canvas.width / 2, startY + index * lineSpacing);
@@ -280,38 +287,43 @@
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
-        // Quét với bước nhảy 6 để không bị quá tải tim
-        for (let y = 0; y < canvas.height; y += 6) {
-            for (let x = 0; x < canvas.width; x += 6) {
+        
+        // Bước nhảy 13px giúp khoảng cách tim được tách bạch, chữ hiện ra thanh thoát
+        const step = 13; 
+        for (let y = 0; y < canvas.height; y += step) {
+            for (let x = 0; x < canvas.width; x += step) {
                 if (imageData[(y * canvas.width + x) * 4 + 3] > 128) {
                     points.push({ x: x - canvas.width/2, y: y - canvas.height/2 });
                 }
             }
         }
-        return points;
+        
+        // Trả về kèm chiều rộng gốc để tính tỉ lệ phóng to
+        return { points, baseWidth: canvas.width };
     }
 
-    // Hàm bắn và ẩn 1 câu nói
     function shootSinglePhrase(lines) {
         return new Promise(resolve => {
-            const points = getTextPoints(lines);
+            const { points, baseWidth } = getTextPoints(lines);
             const scene2 = document.getElementById('scene2');
             const startX = 80; const startY = window.innerHeight - 50; 
             const centerX = window.innerWidth / 2 + 20; const centerY = window.innerHeight / 2 - 50; 
             
             let hearts = [];
-            // Điều chỉnh kích thước chữ cho vừa điện thoại (Scale nhỏ lại)
-            let scaleFactor = window.innerWidth < 600 ? 0.45 : 0.8; 
+            
+            // --- THUẬT TOÁN TỰ ĐỘNG PHÓNG TO CHỮ VỪA KHÍT MÀN HÌNH ---
+            let availableWidth = window.innerWidth * 0.9; // Chữ chiếm tối đa 90% màn hình
+            let scaleFactor = availableWidth / baseWidth;
+            if (scaleFactor > 0.8) scaleFactor = 0.8; // Giới hạn độ to tối đa để không chói mắt trên máy tính
 
-            // Giới hạn số lượng tim để web không bị lag (nếu chữ quá dài)
-            let maxPoints = 400;
+            // Giới hạn số lượng tim để chạy mượt
+            let maxPoints = 350;
             let filteredPoints = points;
             if (points.length > maxPoints) {
                 let step = Math.ceil(points.length / maxPoints);
                 filteredPoints = points.filter((_, i) => i % step === 0);
             }
 
-            // Bắn tim
             filteredPoints.forEach((pt, i) => {
                 let heart = document.createElement('div'); 
                 heart.className = 'mini-heart'; 
@@ -326,21 +338,18 @@
                 
                 setTimeout(() => { 
                     heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`; 
-                }, i * 4); // Bắn cực nhanh (4ms/viên)
+                }, i * 5); 
             });
 
-            // Tổng thời gian bắn + Thời gian nán lại để đọc (2.5 giây)
-            const shootTime = filteredPoints.length * 4;
+            const shootTime = filteredPoints.length * 5;
             const readTime = 2500; 
             
             setTimeout(() => {
-                // Làm mờ dần và bay lên nhẹ
                 hearts.forEach(h => {
                     h.style.opacity = '0';
                     h.style.transform += ' translateY(-30px)'; 
                 });
                 
-                // Sau khi mờ hẳn (1.5s), xóa khỏi HTML và báo hiệu cho câu tiếp theo chạy
                 setTimeout(() => {
                     hearts.forEach(h => h.remove());
                     resolve();
@@ -358,7 +367,7 @@
         setTimeout(() => { initLiXunHeart(); }, 1500);
     }
 
-    // --- THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" ---
+    // --- CANVAS TRÁI TIM "THỦ KHOA LÝ" ---
     function initLiXunHeart() {
         var canvas = document.getElementById('pinkboard');
         var context = canvas.getContext('2d');
