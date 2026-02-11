@@ -63,7 +63,6 @@
     #cute-cat { position: absolute; left: -180px; bottom: 10px; width: 150px; height: auto; transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
     body.in-scene2 #cute-cat { left: -10px; }
     
-    /* 🔴 ĐÃ SỬA: Tăng font-size lên 13px để tim to và chữ dày hơn */
     .mini-heart { 
         position: absolute; color: var(--pink-main); font-size: 13px; pointer-events: none; z-index: 15; 
         transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.5s ease; 
@@ -75,10 +74,7 @@
     .action-btn-text { position: absolute; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; top: 70%; left: 50%; transform: translateX(-50%); }
     .action-btn-text:hover { transform: translate(-50%) scale(1.1); background: var(--pink-light); }
 
-    .arrow-btn {
-        position: fixed; background: none; border: none; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none;
-        transition: opacity 0.5s;
-    }
+    .arrow-btn { position: fixed; background: none; border: none; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
     .arrow-btn svg { width: 60px; height: 60px; fill: var(--pink-main); filter: drop-shadow(0 0 10px var(--pink-main)) drop-shadow(0 0 20px var(--pink-glow)); }
 
     #btn-next-right { top: 75%; left: 50%; animation: bounceRight 1.5s infinite; }
@@ -227,16 +223,16 @@
         }, 1200);
     }
 
-    // --- KỊCH BẢN CHỮ ---
+    // --- KỊCH BẢN CHỮ ĐÃ ĐƯỢC CHIA NHỎ ĐỂ CHỐNG LỖI CẮT NÉT ---
     const storyline = [
         ["Gửi em Nu"],
         ["Ngày hôm nay", "của em thế nào?"],
         ["Nhưng dù cho có", "thế nào đi nữa"],
-        ["Em vẫn sẽ luôn có", "anh Zinh bên cạnh"],
+        ["Em vẫn sẽ luôn", "có anh Zinh", "bên cạnh"], // Chia 3 dòng
         ["Anh sẽ luôn", "yêu thương"],
         ["sẽ luôn", "quan tâm em"],
         ["Nên là"],
-        ["Em phải thiệt vui", "đó biết hong"],
+        ["Em phải", "thiệt vui đó", "biết hong"], // Chia 3 dòng
         ["Happy Valentine,", "my girl"]
     ];
 
@@ -254,12 +250,13 @@
         btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
     }
 
-    // --- CẬP NHẬT THUẬT TOÁN TẠO CHỮ CỰC DÀY ---
+    // --- THUẬT TOÁN QUÉT CHỮ HOÀN TOÀN MỚI ---
     function getTextPoints(lines) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         
-        ctx.font = '900 120px Quicksand'; 
+        // Font vừa đủ để không quá tải trình duyệt, nét vẫn dày
+        ctx.font = '900 80px Quicksand'; 
         
         let maxW = 0;
         lines.forEach(line => {
@@ -267,15 +264,15 @@
             if(w > maxW) maxW = w;
         });
         
-        canvas.width = maxW + 100; 
-        canvas.height = lines.length * 150 + 50; 
+        canvas.width = maxW + 80; 
+        canvas.height = lines.length * 100 + 40; 
         
-        ctx.font = '900 120px Quicksand'; 
+        ctx.font = '900 80px Quicksand'; 
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        const lineSpacing = 140; 
+        const lineSpacing = 95; // Khoảng cách giữa các dòng
         let startY = (canvas.height - (lines.length - 1) * lineSpacing) / 2;
 
         lines.forEach((line, index) => {
@@ -285,8 +282,7 @@
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
         
-        // 🔴 ĐÃ SỬA: Giảm bước nhảy từ 13 xuống 9 để tạo ra mật độ tim dày đặc hơn
-        const step = 9; 
+        const step = 5; // Quét siêu chi tiết
         for (let y = 0; y < canvas.height; y += step) {
             for (let x = 0; x < canvas.width; x += step) {
                 if (imageData[(y * canvas.width + x) * 4 + 3] > 128) {
@@ -303,20 +299,21 @@
             const { points, baseWidth } = getTextPoints(lines);
             const scene2 = document.getElementById('scene2');
             const startX = 80; const startY = window.innerHeight - 50; 
-            const centerX = window.innerWidth / 2 + 20; const centerY = window.innerHeight / 2 - 50; 
+            const centerX = window.innerWidth / 2 + 10; const centerY = window.innerHeight / 2 - 50; 
             
             let hearts = [];
             
+            // Tự động scale vừa màn hình điện thoại
             let availableWidth = window.innerWidth * 0.9; 
             let scaleFactor = availableWidth / baseWidth;
-            if (scaleFactor > 0.8) scaleFactor = 0.8; 
+            if (scaleFactor > 0.9) scaleFactor = 0.9; 
 
-            // 🔴 ĐÃ SỬA: Nâng giới hạn tim lên 600 để lấy đủ số tim cho nét dày
-            let maxPoints = 600;
+            // FIX CẮT CHỮ: Lọc ngẫu nhiên thay vì lọc theo chu kỳ
+            let maxPoints = 800; // Cho phép hiển thị tối đa 800 tim để cực dày
             let filteredPoints = points;
             if (points.length > maxPoints) {
-                let step = Math.ceil(points.length / maxPoints);
-                filteredPoints = points.filter((_, i) => i % step === 0);
+                let ratio = maxPoints / points.length;
+                filteredPoints = points.filter(() => Math.random() < ratio);
             }
 
             filteredPoints.forEach((pt, i) => {
@@ -331,10 +328,9 @@
                 let destX = centerX + (pt.x * scaleFactor); 
                 let destY = centerY + (pt.y * scaleFactor);
                 
-                // 🔴 ĐÃ SỬA: Tăng tốc độ bắn (chỉ delay 3ms) để không phải đợi lâu khi số tim nhiều lên
                 setTimeout(() => { 
                     heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`; 
-                }, i * 3); 
+                }, i * 3); // Bắn cực nhanh
             });
 
             const shootTime = filteredPoints.length * 3;
