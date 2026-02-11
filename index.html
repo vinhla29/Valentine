@@ -10,15 +10,16 @@
         --pink-light: #ff758f;
         --green-dark: #1b4332;
         --green-medium: #2d6a4f;
+        --ruby-color: #d00020; /* Màu cho tim 3D */
     }
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Quicksand', sans-serif}
     
     /* VŨ TRỤ CHỨA CÁC CẢNH (Hỗ trợ lướt xuống) */
     body { margin: 0; overflow: hidden; background: #050505; }
     #universe { 
-        width: 100vw; height: 200vh; /* Cao gấp đôi để lướt xuống */
-        background: radial-gradient(circle at top, #1b1b3a, #050505);
-        transition: transform 2s cubic-bezier(0.65, 0, 0.35, 1); /* Hiệu ứng cuộn mượt */
+        width: 100vw; height: 200vh; /* Cao gấp đôi */
+        background: radial-gradient(circle at top, #1b1b3a, #050505 60%);
+        transition: transform 2.5s cubic-bezier(0.65, 0, 0.35, 1); /* Lướt xuống chậm và mượt hơn */
     }
     
     .screen { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
@@ -36,7 +37,7 @@
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
     @keyframes floatUp { 0% { transform: translateY(110vh) scale(0.5); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
     
-    /* --- SCENE 1: PHONG BÌ & ẢNH --- */
+    /* --- SCENE 1: PHONG BÌ & ẢNH (Giữ nguyên) --- */
     .envelope-wrapper { position: relative; width: 300px; height: 200px; z-index: 100; perspective: 1000px; margin-top: 50px; }
     .envelope { position: relative; width: 100%; height: 100%; background: #ffffff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
     .envelope::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 30; background: #fff; clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
@@ -61,27 +62,63 @@
     .leaf.left { left: -20px; transform: rotate(-35deg) scaleX(-1); } .leaf.right { right: -20px; transform: rotate(35deg); }
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
 
-    /* --- CÁC NÚT BẤM (BUTTONS) --- */
+    /* --- CÁC NÚT BẤM --- */
     .action-btn { position: absolute; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; }
     .action-btn:hover { transform: scale(1.1); background: var(--pink-light); }
     #btn-open { top: 70%; left: 50%; transform: translateX(-50%); }
     #btn-next1 { top: 75%; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; }
-    #btn-next2 { bottom: 30px; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; z-index: 2000; position: fixed;} /* Nút kéo xuống */
+
+    /* Nút mũi tên chỉ xuống (Mới) */
+    #btn-down-arrow {
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+        background: none; border: none; font-size: 3rem; color: rgba(255,255,255,0.7);
+        cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none;
+        animation: bounceArrow 1.5s infinite;
+        text-shadow: 0 0 10px var(--pink-main);
+    }
+    @keyframes bounceArrow { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-20px);} 60% {transform: translateX(-50%) translateY(-10px);} }
 
     /* --- SCENE 2: MÈO BẮN CHỮ TỪ TRÁI --- */
     #cute-cat {
-        position: absolute; 
-        left: -150px; bottom: 10px; /* Nằm dưới góc TRÁI */
-        width: 120px; height: auto;
-        transition: left 1s ease-out; z-index: 20;
+        position: absolute; left: -180px; bottom: 10px; width: 150px; height: auto;
+        transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20;
         filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
     }
-    body.in-scene2 #cute-cat { left: 10px; /* Trồi ra từ viền trái */ }
-    .mini-heart { position: absolute; color: var(--pink-main); font-size: 12px; pointer-events: none; z-index: 15; transition: all 2s cubic-bezier(0.25, 1, 0.5, 1); filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); }
+    body.in-scene2 #cute-cat { left: -10px; }
+    .mini-heart { position: absolute; color: var(--pink-main); font-size: 14px; pointer-events: none; z-index: 15; transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1); filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); }
 
-    /* --- SCENE 3: TRÁI TIM SIÊU TO --- */
-    #scene3 { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden;}
-    .giant-heart-particle { position: absolute; color: #ff0040; font-size: 18px; pointer-events: none; opacity: 0; transition: all 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 0 8px rgba(255, 0, 64, 0.8)); }
+    /* --- SCENE 3: TRÁI TIM 3D ĐẬP (Mới cực mạnh) --- */
+    #scene3 { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; position: relative; overflow: visible;}
+    
+    /* Container chứa trái tim để áp dụng nhịp đập */
+    .heart-container {
+        position: relative; width: 100px; height: 100px;
+        /* Animation nhịp đập chân thực */
+        animation: realisticBeat 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+        opacity: 0; transition: opacity 1s;
+    }
+
+    /* Các hạt 3D tạo nên trái tim */
+    .particle-3d {
+        position: absolute; top: 50%; left: 50%;
+        width: 24px; height: 24px;
+        border-radius: 50%;
+        /* Tạo khối cầu 3D bằng gradient */
+        background: radial-gradient(circle at 30% 30%, #ff5e7e, var(--ruby-color));
+        /* Bóng đổ tạo chiều sâu */
+        box-shadow: inset -2px -2px 6px rgba(0,0,0,0.4), 2px 2px 5px rgba(0,0,0,0.3);
+        transform: translate(-50%, -50%) scale(0); /* Ban đầu thu nhỏ */
+        transition: transform 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Nhịp tim đập: Mạnh - Nghỉ - Nhẹ - Nghỉ */
+    @keyframes realisticBeat {
+        0% { transform: scale(1); }
+        14% { transform: scale(1.15); }
+        28% { transform: scale(1); }
+        42% { transform: scale(1.08); }
+        70% { transform: scale(1); }
+    }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
 </head>
@@ -120,11 +157,13 @@
 
     <div class="screen" id="screen2">
         <div id="scene3">
-            </div>
+            <div class="heart-container" id="giant-heart">
+                </div>
+        </div>
     </div>
 </div>
 
-<button class="action-btn" id="btn-next2" onclick="scrollDownToScene3()">Kéo xuống xem tiếp 👇</button>
+<button id="btn-down-arrow" onclick="scrollDownToScene3()">🔽</button>
 
 
 <script>
@@ -142,12 +181,12 @@
         "https://via.placeholder.com/150x150/f4a261/fff?text=Anh+15", "https://via.placeholder.com/150x150/e76f51/fff?text=Anh+16"
     ];
 
-    // Tạo sao và tim nền bay lơ lửng cho cả vũ trụ
+    // Tạo sao và tim nền
     const universe = document.getElementById('universe');
-    for(let i=0; i<80; i++) {
+    for(let i=0; i<100; i++) { // Tăng số lượng sao
         let s = document.createElement('div'); s.className = 'star';
         s.style.width = s.style.height = Math.random() * 2 + 'px';
-        s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 200 + 'vh'; // Rải đều 200vh
+        s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 200 + 'vh';
         universe.appendChild(s);
     }
     setInterval(() => {
@@ -156,7 +195,6 @@
         universe.appendChild(h); setTimeout(() => h.remove(), 6000);
     }, 400);
 
-    // Hàm gõ chữ
     function typeLine(elementId, text, speed, callback) {
         let i = 0; let el = document.getElementById(elementId);
         function type() {
@@ -175,70 +213,41 @@
         let group1Els = []; let group2Els = [];
         const radius = 280; 
 
-        // Bung Set 1
         photos1.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
-            img.innerHTML = `<img src="${url}">`;
-            img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
-            document.getElementById('scene1').appendChild(img);
-            group1Els.push(img);
-            
-            let angle = (i / 8) * Math.PI * 2;
-            let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40;
-            let rot = (Math.random() - 0.5) * 30;
+            img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
+            document.getElementById('scene1').appendChild(img); group1Els.push(img);
+            let angle = (i / 8) * Math.PI * 2; let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40; let rot = (Math.random() - 0.5) * 30;
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
-            
-            setTimeout(() => {
-                img.style.opacity = '1'; img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`;
-                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500);
-            }, i * 150);
+            setTimeout(() => { img.style.opacity = '1'; img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500); }, i * 150);
         });
 
-        // Set 2 tàng hình
         photos2.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
-            img.innerHTML = `<img src="${url}">`;
-            img.style.left = '50%'; img.style.top = '45%';
-            document.getElementById('scene1').appendChild(img);
-            group2Els.push(img);
-            
-            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); 
-            let radB = 250 + (i % 2 === 0 ? 30 : -20);
-            let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40;
-            let rot = (Math.random() - 0.5) * 40;
+            img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; document.getElementById('scene1').appendChild(img); group2Els.push(img);
+            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); let radB = 250 + (i % 2 === 0 ? 30 : -20); let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40; let rot = (Math.random() - 0.5) * 40;
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
-            
-            img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`;
-            img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
+            img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
         });
 
-        // Đảo ảnh qua lại
         setTimeout(() => {
             let showGroup1 = true;
             setInterval(() => {
-                if(!document.body.classList.contains('in-scene2')) { // Chỉ đổi khi còn ở scene 1
+                if(!document.body.classList.contains('in-scene2')) {
                     showGroup1 = !showGroup1;
-                    if(showGroup1) {
-                        group2Els.forEach(img => img.style.opacity = '0');
-                        setTimeout(() => { group1Els.forEach(img => img.style.opacity = '1'); }, 1000);
-                    } else {
-                        group1Els.forEach(img => img.style.opacity = '0');
-                        setTimeout(() => { group2Els.forEach(img => img.style.opacity = '1'); }, 1000);
-                    }
+                    if(showGroup1) { group2Els.forEach(img => img.style.opacity = '0'); setTimeout(() => { group1Els.forEach(img => img.style.opacity = '1'); }, 1000);
+                    } else { group1Els.forEach(img => img.style.opacity = '0'); setTimeout(() => { group2Els.forEach(img => img.style.opacity = '1'); }, 1000); }
                 }
             }, 3500);
         }, 3000);
 
-        // Gõ chữ và HIỆN NÚT "TIẾP TỤC"
         setTimeout(() => {
             typeLine('line1', "Happy Valentine's 💖", 50, () => {
                 typeLine('line2', "Em là điều tuyệt vời nhất!", 50, () => {
                     typeLine('line3', "Cảm ơn em đã ở bên anh 🥰", 50, () => {
                         typeLine('line4', "Anh yêu em rất nhiều 💕", 60, () => {
-                            // Chữ gõ xong -> Hiện nút bấm chuyển cảnh
                             const nextBtn = document.getElementById('btn-next1');
-                            nextBtn.style.opacity = '1';
-                            nextBtn.style.pointerEvents = 'auto';
+                            nextBtn.style.opacity = '1'; nextBtn.style.pointerEvents = 'auto';
                         });
                     });
                 });
@@ -246,45 +255,33 @@
         }, 1200);
     }
 
-    // --- LOGIC CHUYỂN SANG SCENE 2 (MÈO BẮN TỪ TRÁI SANG) ---
+    // --- CHUYỂN SANG SCENE 2 (MÈO BẮN CHỮ TO) ---
     function goToScene2() {
-        document.body.classList.add('in-scene2'); // Đổi CSS để giấu cảnh 1, hiện cảnh 2
+        document.body.classList.add('in-scene2');
         document.getElementById('btn-next1').style.opacity = '0';
         document.getElementById('btn-next1').style.pointerEvents = 'none';
-        
-        // Chờ 1.5s cho mèo chạy từ góc trái ra rồi mới bắn tim
-        setTimeout(() => {
-            shootTextFromLeft();
-        }, 1500);
+        setTimeout(() => { shootTextFromLeft(); }, 1500);
     }
 
-    // Thuật toán Canvas để lấy tọa độ tạo chữ "Happy Valentine em Nu"
     function getTextPoints() {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        // Kích thước canvas ảo
-        canvas.width = 400; 
-        canvas.height = 200; 
-        
+        // Tăng kích thước canvas và font chữ để chữ TO HƠN
+        canvas.width = 600; canvas.height = 300; 
         ctx.fillStyle = 'black';
-        ctx.font = 'bold 28px Quicksand';
+        ctx.font = 'bold 50px Quicksand'; // Font to gấp đôi
         ctx.textAlign = 'center';
-        // Viết 3 dòng chữ
-        ctx.fillText("Happy", 200, 50);
-        ctx.fillText("Valentine", 200, 90);
-        ctx.fillText("em Nu", 200, 130);
+        ctx.fillText("Happy", 300, 70);
+        ctx.fillText("Valentine", 300, 130);
+        ctx.fillText("em Nu", 300, 190);
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
-        
-        // Quét canvas để lấy các điểm đen (pixel có nội dung)
-        // Quét thưa ra (bước nhảy i+=4, j+=4) để không bị quá nhiều tim
-        for (let y = 0; y < canvas.height; y += 4) {
-            for (let x = 0; x < canvas.width; x += 4) {
-                const index = (y * canvas.width + x) * 4;
-                if (imageData[index + 3] > 128) { // Nếu pixel không trong suốt
-                    // Chuẩn hóa tọa độ về tâm (0,0)
-                    points.push({ x: x - 200, y: y - 100 });
+        // Tăng bước nhảy để không bị quá nhiều tim (do chữ to lên)
+        for (let y = 0; y < canvas.height; y += 7) {
+            for (let x = 0; x < canvas.width; x += 7) {
+                if (imageData[(y * canvas.width + x) * 4 + 3] > 128) {
+                    points.push({ x: x - 300, y: y - 150 });
                 }
             }
         }
@@ -294,109 +291,54 @@
     function shootTextFromLeft() {
         const points = getTextPoints();
         const scene2 = document.getElementById('scene2');
-        
-        // Tọa độ bắn: Từ miệng con mèo (Bên trái dưới)
-        const startX = 100; // Cách lề trái 100px
-        const startY = window.innerHeight - 50; 
-
-        // Tọa độ đích: Nằm giữa màn hình (Nhích sang phải một chút để cân bằng)
-        const centerX = window.innerWidth / 2 + 30; 
-        const centerY = window.innerHeight / 2 - 50; 
+        const startX = 80; const startY = window.innerHeight - 50; 
+        const centerX = window.innerWidth / 2 + 20; const centerY = window.innerHeight / 2 - 50; 
 
         points.forEach((pt, i) => {
-            let heart = document.createElement('div');
-            heart.className = 'mini-heart';
-            heart.innerHTML = '❤️';
-            heart.style.left = startX + 'px';
-            heart.style.top = startY + 'px';
-            heart.style.transform = `translate(-50%, -50%) scale(0)`;
+            let heart = document.createElement('div'); heart.className = 'mini-heart'; heart.innerHTML = '❤️';
+            heart.style.left = startX + 'px'; heart.style.top = startY + 'px'; heart.style.transform = `translate(-50%, -50%) scale(0)`;
             scene2.appendChild(heart);
-
-            // Nhân hệ số scale cho chữ to/nhỏ tùy ý (tui để 1.2 cho vừa đt)
-            let destX = centerX + (pt.x * 1.2);
-            let destY = centerY + (pt.y * 1.2);
-
-            setTimeout(() => {
-                // Hiệu ứng bay cong một chút (cubic-bezier trong CSS lo)
-                heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`;
-            }, i * 15); // Bắn liên thanh cực nhanh (15ms/viên)
+            // Scale 1.1 cho chữ vừa vặn màn hình đt
+            let destX = centerX + (pt.x * 1.1); let destY = centerY + (pt.y * 1.1);
+            setTimeout(() => { heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`; }, i * 12);
         });
 
-        // Sau khi bắn chữ xong khoảng 4 giây, hiện nút kéo xuống
         setTimeout(() => {
-            const btnNext2 = document.getElementById('btn-next2');
-            btnNext2.style.opacity = '1';
-            btnNext2.style.pointerEvents = 'auto';
-        }, points.length * 15 + 3000);
+            const btnDown = document.getElementById('btn-down-arrow');
+            btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
+        }, points.length * 12 + 2000);
     }
 
-    // --- LOGIC LƯỚT XUỐNG CẢNH 3 (TRÁI TIM KHỔNG LỒ) ---
+    // --- LƯỚT XUỐNG CẢNH 3 (TRÁI TIM 3D ĐẬP) ---
     function scrollDownToScene3() {
-        // Giấu nút
-        document.getElementById('btn-next2').style.opacity = '0';
-        document.getElementById('btn-next2').style.pointerEvents = 'none';
-        
-        // Kéo toàn bộ vũ trụ lên trên (Lướt camera xuống)
+        document.getElementById('btn-down-arrow').style.opacity = '0';
+        document.getElementById('btn-down-arrow').style.pointerEvents = 'none';
         document.getElementById('universe').style.transform = 'translateY(-100vh)';
-
-        // Đợi màn hình lướt xong (2s) rồi bùng nổ tim
-        setTimeout(() => {
-            explodeGiantHeart();
-        }, 2000);
+        setTimeout(() => { explodeGiantHeart3D(); }, 2000);
     }
 
-    function explodeGiantHeart() {
-        const scene3 = document.getElementById('scene3');
-        const centerX = window.innerWidth / 2;
-        const centerY = window.innerHeight / 2;
-
-        const numParticles = 200; // Trái tim tạo thành khối to
-        const scale = 12; // Độ lớn của trái tim khổng lồ
+    function explodeGiantHeart3D() {
+        const container = document.getElementById('giant-heart');
+        container.style.opacity = '1';
+        const numParticles = 180; // Số lượng hạt 3D
+        const scale = 15; // Độ lớn của trái tim
 
         for (let i = 0; i < Math.PI * 2; i += (Math.PI * 2) / numParticles) {
-            // CÔNG THỨC TOÁN HỌC VẼ HÌNH TRÁI TIM
+            // Công thức hình trái tim
             let x = 16 * Math.pow(Math.sin(i), 3);
-            let y = -(13 * Math.cos(i) - 5 * Math.cos(2*i) - 2 * Math.cos(3*i) - Math.cos(4*i)); // Dấu âm vì trục Y web hướng xuống
+            let y = -(13 * Math.cos(i) - 5 * Math.cos(2*i) - 2 * Math.cos(3*i) - Math.cos(4*i));
 
-            let heart = document.createElement('div');
-            heart.className = 'giant-heart-particle';
-            heart.innerHTML = '❤️';
+            let particle = document.createElement('div');
+            particle.className = 'particle-3d';
+            // Không dùng emoji nữa, dùng thẻ div đã CSS 3D
             
-            // Đặt tất cả xuất phát từ giữa màn hình (chưa bung)
-            heart.style.left = centerX + 'px';
-            heart.style.top = centerY + 'px';
-            heart.style.transform = `translate(-50%, -50%) scale(0.1)`;
-            scene3.appendChild(heart);
+            container.appendChild(particle);
 
-            // Cho nó bung ra tạo thành hình
+            // Bung ra từ tâm
             setTimeout(() => {
-                heart.style.opacity = '1';
-                heart.style.transform = `translate(calc(-50% + ${x * scale}px), calc(-50% + ${y * scale}px)) scale(1)`;
-                
-                // Hiệu ứng nhịp đập cho trái tim to
-                setTimeout(() => {
-                    heart.style.animation = `sway 1.5s ease-in-out infinite alternate`;
-                }, 2500);
-            }, 100);
+                particle.style.transform = `translate(calc(-50% + ${x * scale}px), calc(-50% + ${y * scale}px)) scale(1)`;
+            }, i * 5); // Bung ra từ từ kiểu dây chuyền
         }
-
-        // Tặng thêm chữ giữa trái tim to cho lãng mạn
-        setTimeout(() => {
-            let text = document.createElement('h1');
-            text.innerHTML = "I LOVE YOU FOREVER";
-            text.style.position = 'absolute';
-            text.style.color = 'white';
-            text.style.fontSize = '2rem';
-            text.style.fontFamily = 'Quicksand, sans-serif';
-            text.style.textShadow = '0 0 10px #ff0040, 0 0 20px #ff0040';
-            text.style.opacity = '0';
-            text.style.transition = 'opacity 2s ease';
-            text.style.zIndex = '100';
-            scene3.appendChild(text);
-            
-            // Fade in chữ
-            setTimeout(() => { text.style.opacity = '1'; }, 100);
-        }, 3000);
     }
 </script>
 </body>
