@@ -68,12 +68,11 @@
     .sticker-tl { top: -12px; left: -12px; transform: rotate(-20deg); }
     .sticker-br { bottom: -12px; right: -12px; transform: rotate(15deg); }
 
-    /* ẢNH BAY */
+    /* ẢNH BAY VÀ HIỆU ỨNG ẨN HIỆN */
     .photo-card { 
         position: absolute; width: 90px; background: white; padding: 4px; padding-bottom: 18px; 
         box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; 
-        /* Cập nhật transition: Tách riêng opacity và transform để lúc ẩn đi dịch chuyển không bị lộ */
-        transition: opacity 0.8s ease-in-out, transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
+        transition: opacity 1s ease-in-out, transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
         pointer-events: none; border-radius: 3px; 
     }
     .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
@@ -94,6 +93,8 @@
     .leaf { position: absolute; background: linear-gradient(to top, var(--green-dark), #40916c); clip-path: ellipse(15% 50% at 50% 50%); width: 25px; height: 85px; bottom: 5px; transform-origin: bottom center; }
     .leaf.left { left: -20px; transform: rotate(-35deg) scaleX(-1); }
     .leaf.right { right: -20px; transform: rotate(35deg); }
+    
+    /* Animation đung đưa */
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
 
     /* --- CSS CỦA SCENE 2 --- */
@@ -105,7 +106,7 @@
 </head>
 <body>
 
-<div id="countdown-box">Chờ anh <span id="time">12</span> giây nhé 🥰</div>
+<div id="countdown-box">Chờ anh <span id="time">15</span> giây nhé 🥰</div>
 
 <div class="scene" id="scene1">
     <div class="envelope-wrapper">
@@ -134,17 +135,30 @@
 </div>
 
 <script>
-    // 1. DANH SÁCH ẢNH
- const photos = [
-        "./images/anh1.jpg.JPG",
-        "./images/anh2.jpg.jpg",
-        "./images/anh3.jpg.JPG",
-        "./images/anh4.jpg.JPG",
-        "./images/anh5.jpg.JPG",
-        "./images/anh6.jpg.JPG",
-        "./images/anh7.jpg.PNG",
-        "./images/anh8.jpg.JPG"
+    // 🔥 SUỘT 1 (8 ẢNH ĐẦU TIÊN)
+    const photos1 = [
+        "https://via.placeholder.com/150x150/ffb3c1/fff?text=Set1+Anh1",
+        "https://via.placeholder.com/150x150/ffafcc/fff?text=Set1+Anh2",
+        "https://via.placeholder.com/150x150/ffc8dd/fff?text=Set1+Anh3",
+        "https://via.placeholder.com/150x150/cdb4db/fff?text=Set1+Anh4",
+        "https://via.placeholder.com/150x150/a2d2ff/fff?text=Set1+Anh5",
+        "https://via.placeholder.com/150x150/bde0fe/fff?text=Set1+Anh6",
+        "https://via.placeholder.com/150x150/8ecae6/fff?text=Set1+Anh7",
+        "https://via.placeholder.com/150x150/219ebc/fff?text=Set1+Anh8"
     ];
+
+    // 🔥 SUỘT 2 (8 ẢNH XUẤT HIỆN XEN KẼ LÚC SAU)
+    const photos2 = [
+        "https://via.placeholder.com/150x150/f08080/fff?text=Set2+Anh1",
+        "https://via.placeholder.com/150x150/f4978e/fff?text=Set2+Anh2",
+        "https://via.placeholder.com/150x150/f8ad9d/fff?text=Set2+Anh3",
+        "https://via.placeholder.com/150x150/fbc4ab/fff?text=Set2+Anh4",
+        "https://via.placeholder.com/150x150/ffdab9/fff?text=Set2+Anh5",
+        "https://via.placeholder.com/150x150/e9c46a/fff?text=Set2+Anh6",
+        "https://via.placeholder.com/150x150/f4a261/fff?text=Set2+Anh7",
+        "https://via.placeholder.com/150x150/e76f51/fff?text=Set2+Anh8"
+    ];
+
     // Decor Chung
     for(let i=0; i<60; i++) {
         let s = document.createElement('div'); s.className = 'star';
@@ -158,7 +172,6 @@
         document.body.appendChild(h); setTimeout(() => h.remove(), 6000);
     }, 500);
 
-    // --- HÀM GÕ CHỮ ---
     function typeLine(elementId, text, speed, callback) {
         let i = 0; let el = document.getElementById(elementId);
         function type() {
@@ -168,82 +181,88 @@
         type();
     }
 
-    // --- LOGIC MỞ THƯ & ẢO THUẬT ẢNH ---
+    // --- LOGIC MỞ THƯ & XUẤT HIỆN 2 SET ẢNH XEN KẼ ---
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
 
-        const total = photos.length;
-        
-        photos.forEach((url, i) => {
+        let group1Els = [];
+        let group2Els = [];
+
+        // 1. CHUẨN BỊ SET 1 (Bay ra ngoài ngay từ đầu)
+        photos1.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`;
             img.style.left = '50%'; img.style.top = '45%';
             img.style.transform = 'translate(-50%, -50%) scale(0)';
             document.getElementById('scene1').appendChild(img);
+            group1Els.push(img);
             
-            // TỌA ĐỘ A (Vòng tròn chuẩn ban đầu)
-            let angleA = (i / total) * Math.PI * 2;
-            let radiusA = 280; 
-            let xA = Math.cos(angleA) * radiusA; 
-            let yA = Math.sin(angleA) * radiusA - 40;
-            let rotA = (Math.random() - 0.5) * 30;
+            let angle = (i / 8) * Math.PI * 2;
+            let radius = 280; 
+            let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40;
+            let rot = (Math.random() - 0.5) * 30;
 
-            // TỌA ĐỘ B (Vòng tròn xen kẽ, bán kính lộn xộn để tạo sự khác biệt)
-            let angleB = angleA + (Math.PI / total); // Lệch đi nửa góc
-            let radiusB = 240 + (i % 2 === 0 ? 30 : -20); // Đứa xa đứa gần
-            let xB = Math.cos(angleB) * radiusB; 
-            let yB = Math.sin(angleB) * radiusB - 40;
-            let rotB = (Math.random() - 0.5) * 50;
-
-            // --- TRÌNH TỰ ANIMATION KỲ DIỆU ---
+            img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
+            
             setTimeout(() => {
-                // BƯỚC 1: Bung ra tọa độ A
                 img.style.opacity = '1';
-                img.style.transform = `translate(calc(-50% + ${xA}px), calc(-50% + ${yA}px)) rotate(${rotA}deg)`;
-                
-                // BƯỚC 2: Chờ 2.5 giây, sau đó ẩn đi
-                setTimeout(() => {
-                    img.style.opacity = '0';
-                    
-                    // BƯỚC 3: Trong lúc đang tàng hình, di chuyển sang tọa độ B, rồi hiện lên
-                    setTimeout(() => {
-                        img.style.transform = `translate(calc(-50% + ${xB}px), calc(-50% + ${yB}px)) rotate(${rotB}deg)`;
-                        img.style.opacity = '1';
-                        
-                        // BƯỚC 4: Đứng ngắm ở tọa độ B khoảng 3 giây, sau đó lại ẩn đi
-                        setTimeout(() => {
-                            img.style.opacity = '0';
-                            
-                            // BƯỚC 5: Di chuyển ngược về tọa độ A, hiện lên và bắt đầu đung đưa vĩnh viễn
-                            setTimeout(() => {
-                                img.style.transform = `translate(calc(-50% + ${xA}px), calc(-50% + ${yA}px)) rotate(${rotA}deg)`;
-                                img.style.opacity = '1';
-                                
-                                // Gắn hiệu ứng đung đưa sau khi đã an vị ở chỗ cũ
-                                setTimeout(() => {
-                                    img.style.setProperty('--x', `calc(-50% + ${xA}px)`); 
-                                    img.style.setProperty('--y', `calc(-50% + ${yA}px)`); 
-                                    img.style.setProperty('--r', `${rotA}deg`);
-                                    img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
-                                }, 1200);
-
-                            }, 800); // Tốc độ ẩn -> hiện về A
-                        }, 3000); // Thời gian đứng ngắm ở B
-                    }, 800); // Tốc độ ẩn -> hiện sang B
-                }, 2500); // Thời gian đứng ngắm ở A lần đầu
-
+                img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`;
+                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500);
             }, i * 150);
         });
 
-        // Gõ chữ (Trùng khớp thời gian với lúc ảnh đang biến hóa)
+        // 2. CHUẨN BỊ SET 2 (Vị trí xen kẽ, tàng hình chờ tới lượt)
+        photos2.forEach((url, i) => {
+            let img = document.createElement('div'); img.className = 'photo-card';
+            img.innerHTML = `<img src="${url}">`;
+            img.style.left = '50%'; img.style.top = '45%';
+            document.getElementById('scene1').appendChild(img);
+            group2Els.push(img);
+            
+            // Cấu hình góc xen kẽ (cộng thêm PI/8 để lọt thỏm vào giữa ảnh Set 1)
+            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); 
+            // Bán kính nhấp nhô khác Set 1 cho đẹp
+            let radius = 250 + (i % 2 === 0 ? 30 : -20);
+            let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40;
+            let rot = (Math.random() - 0.5) * 40;
+
+            img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
+            
+            // Gán thẳng vào vị trí đích nhưng để Opacity = 0 (tàng hình)
+            img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`;
+            img.style.opacity = '0';
+            img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
+        });
+
+        // 3. VÒNG LẶP ĐỔI SET ẢNH (Ứng dụng Fade in/out)
+        setTimeout(() => {
+            let showGroup1 = true;
+            // Cứ mỗi 4 giây sẽ đổi ca 1 lần
+            setInterval(() => {
+                showGroup1 = !showGroup1;
+                if(showGroup1) {
+                    // Set 2 mờ đi
+                    group2Els.forEach(img => img.style.opacity = '0');
+                    // Đợi Set 2 mờ xong thì Set 1 hiện lên
+                    setTimeout(() => { group1Els.forEach(img => img.style.opacity = '1'); }, 1000);
+                } else {
+                    // Set 1 mờ đi
+                    group1Els.forEach(img => img.style.opacity = '0');
+                    // Đợi Set 1 mờ xong thì Set 2 hiện lên
+                    setTimeout(() => { group2Els.forEach(img => img.style.opacity = '1'); }, 1000);
+                }
+            }, 3500);
+        }, 3000); // Bắt đầu chu trình đổi ảnh sau 3 giây mở thư
+
+        // 4. GÕ CHỮ LÁ THƯ
         setTimeout(() => {
             typeLine('line1', "Happy Valentine's 💖", 50, () => {
                 typeLine('line2', "Em là điều tuyệt vời nhất!", 50, () => {
                     typeLine('line3', "Cảm ơn em đã ở bên anh 🥰", 50, () => {
                         typeLine('line4', "Anh yêu em rất nhiều 💕", 60, () => {
-                            startCountdown();
+                            startCountdown(); // Tăng đếm ngược lên 15s để ngắm 2 Set ảnh
                         });
                     });
                 });
@@ -257,7 +276,7 @@
         const timeSpan = document.getElementById('time');
         countBox.style.opacity = '1';
         
-        let timeLeft = 12;
+        let timeLeft = 15; // Set 15 giây để kịp ngắm 2 đợt ảnh đổi nhau
         timeSpan.innerText = timeLeft;
         
         let timer = setInterval(() => {
@@ -271,7 +290,7 @@
         }, 1000);
     }
 
-    // --- CẢNH 2: GHÉP CHỮ ---
+    // --- CẢNH 2: GHÉP CHỮ BẰNG MA TRẬN TỌA ĐỘ ---
     function switchScene() {
         document.body.classList.add('switch-scene');
         setTimeout(() => {
