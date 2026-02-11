@@ -29,7 +29,7 @@
     /* --- ĐẾM NGƯỢC (Đã dời xuống dưới) --- */
     #countdown-box {
         position: absolute; 
-        top: 70%; /* Dời xuống dưới phong bì */
+        top: 75%; /* Dời xuống thấp hơn tí nữa */
         left: 50%; transform: translateX(-50%);
         background: rgba(255, 77, 109, 0.9); color: white;
         padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: bold;
@@ -51,7 +51,7 @@
     
     .letter { 
         position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
-        width: 90%; min-height: 180px; /* Cố định chiều cao để không bị giật khi gõ chữ */
+        width: 90%; min-height: 180px; 
         background: #fff; padding: 20px 15px; border-radius: 5px; color: #c9184a; text-align: center; 
         transition: transform 0.8s 0.3s, z-index 0s 0.3s; z-index: 20; 
         background-image: repeating-linear-gradient(white, white 24px, #fde2e8 25px); 
@@ -71,12 +71,19 @@
         border: 1px solid #fde2e8;
         display: flex; justify-content: center; align-items: center;
     }
-    /* Góc trên bên trái */
     .sticker-tl { top: -12px; left: -12px; transform: rotate(-20deg); }
-    /* Góc dưới bên phải */
     .sticker-br { bottom: -12px; right: -12px; transform: rotate(15deg); }
 
-    .photo-card { position: absolute; width: 90px; background: white; padding: 4px; padding-bottom: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; border-radius: 3px; }
+    /* CẬP NHẬT CSS CHO ẢNH BAY */
+    .photo-card { 
+        position: absolute; width: 90px; background: white; padding: 4px; padding-bottom: 18px; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; 
+        /* Tăng thời gian transition lên để bay mượt hơn */
+        transition: all 2s cubic-bezier(0.25, 1, 0.5, 1); 
+        pointer-events: none; border-radius: 3px; 
+        /* Set sẵn vị trí bằng biến CSS */
+        transform: translate(var(--x), var(--y)) rotate(var(--r));
+    }
     .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
     
     .open-btn { position: absolute; top: 70%; padding: 15px 45px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 200; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; }
@@ -141,8 +148,8 @@
 </div>
 
 <script>
-    // 1. DANH SÁCH ẢNH (THAY LINK CỦA ÔNG VÀO)
-   const photos = [
+    // 1. DANH SÁCH ẢNH (THAY LINK CỦA ÔNG VÀO ĐÂY NHA)
+const photos = [
         "./images/anh1.jpg.JPG",
         "./images/anh2.jpg.jpg",
         "./images/anh3.jpg.JPG",
@@ -176,11 +183,30 @@
                 i++;
                 setTimeout(type, speed);
             } else if (callback) {
-                setTimeout(callback, 200); // Ngưng một chút trước khi gõ dòng tiếp theo
+                setTimeout(callback, 200);
             }
         }
         type();
     }
+
+    // --- HÀM RANDOM VỊ TRÍ MỚI CHO ẢNH ---
+    function randomizePhotoPosition(img) {
+        // Bán kính ngẫu nhiên từ 250 đến 320 (Xa hơn xíu)
+        const minR = 250;
+        const maxR = 320;
+        const newRadius = minR + Math.random() * (maxR - minR);
+        const newAngle = Math.random() * Math.PI * 2; // Góc ngẫu nhiên
+
+        const x = Math.cos(newAngle) * newRadius;
+        const y = Math.sin(newAngle) * newRadius - 40;
+        const randomRot = (Math.random() - 0.5) * 40;
+
+        // Cập nhật biến CSS để transition tự chạy
+        img.style.setProperty('--x', `calc(-50% + ${x}px)`);
+        img.style.setProperty('--y', `calc(-50% + ${y}px)`);
+        img.style.setProperty('--r', `${randomRot}deg`);
+    }
+
 
     // --- LOGIC MỞ THƯ ---
     function openLetter() {
@@ -188,33 +214,56 @@
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
 
-        // Bung ảnh
+        // Bung ảnh lần đầu
         const total = photos.length;
-        const radius = 200;
+        // TĂNG BÁN KÍNH BAN ĐẦU LÊN 280 ĐỂ XA THƯ HƠN
+        const radius = 280; 
         photos.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`;
-            img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
+            // Xuất phát từ giữa
+            img.style.left = '50%'; img.style.top = '45%';
+            img.style.transform = 'translate(-50%, -50%) scale(0)';
+            
             document.getElementById('scene1').appendChild(img);
             
             let angle = (i / total) * Math.PI * 2;
             let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40;
             let randomRot = (Math.random() - 0.5) * 30;
+
+            // Set vị trí đích
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${randomRot}deg`);
             
             setTimeout(() => {
-                img.style.opacity = '1'; img.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${randomRot}deg)`;
-                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500);
+                // Bay ra
+                img.style.opacity = '1';
+                img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`;
+                
+                // Sau khi bay ra xong, bắt đầu đung đưa nhẹ
+                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 2000);
+
+                // --- KÍCH HOẠT RANDOM DI CHUYỂN ---
+                // Đợi khoảng 4 giây sau khi mở, bắt đầu cho di chuyển ngẫu nhiên
+                setTimeout(() => {
+                    // Tắt animation đung đưa cũ đi để không bị xung đột
+                    img.style.animation = 'none';
+                    // Di chuyển lần đầu
+                    randomizePhotoPosition(img);
+                    // Cài đặt lặp lại cứ 4-7 giây di chuyển 1 lần
+                    setInterval(() => {
+                        randomizePhotoPosition(img);
+                    }, 4000 + Math.random() * 3000);
+                }, 4000);
+
             }, i * 150);
         });
 
-        // Đợi thư bay lên xong (khoảng 1.2s) rồi bắt đầu gõ chữ
+        // Gõ chữ
         setTimeout(() => {
             typeLine('line1', "Happy Valentine's 💖", 50, () => {
                 typeLine('line2', "Em là điều tuyệt vời nhất!", 50, () => {
                     typeLine('line3', "Cảm ơn em đã ở bên anh 🥰", 50, () => {
                         typeLine('line4', "Anh yêu em rất nhiều 💕", 60, () => {
-                            // Sau khi gõ xong chữ thì hiện bảng đếm ngược
                             startCountdown();
                         });
                     });
@@ -229,7 +278,7 @@
         const timeSpan = document.getElementById('time');
         countBox.style.opacity = '1';
         
-        let timeLeft = 12; // Tôi tăng lên 12 giây để cô ấy đọc kỹ thư
+        let timeLeft = 12;
         timeSpan.innerText = timeLeft;
         
         let timer = setInterval(() => {
