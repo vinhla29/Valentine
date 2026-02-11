@@ -16,10 +16,11 @@
     
     body { margin: 0; overflow: hidden; background: #000; }
     
+    /* VŨ TRỤ CHỨA SAO VÀ TIM BAY (Chung cho cả 2 màn hình) */
     #universe { 
-        width: 100vw; height: 200vh; 
-        /* Phần trên xanh đen, phần dưới đen tuyền */
-        background: linear-gradient(to bottom, #1b1b3a 0%, #000000 50%, #000000 100%);
+        width: 100vw; height: 200vh; /* Cao gấp đôi để lướt xuống */
+        /* Nền chuyển từ xanh đen sang đen tuyền, chứa sao */
+        background: linear-gradient(to bottom, #1b1b3a 0%, #000000 60%, #000000 100%);
         transition: transform 2.5s cubic-bezier(0.65, 0, 0.35, 1);
     }
     
@@ -32,7 +33,7 @@
     body.in-scene2 #scene1 { opacity: 0; pointer-events: none; }
     body.in-scene2 #scene2 { opacity: 1; pointer-events: auto; z-index: 10; }
 
-    /* BACKGROUND SCENE 1 & 2 */
+    /* BACKGROUND ELEMENTS */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
@@ -68,28 +69,45 @@
     body.in-scene2 #cute-cat { left: -10px; }
     .mini-heart { position: absolute; color: var(--pink-main); font-size: 14px; pointer-events: none; z-index: 15; transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1); filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); }
 
-    /* BUTTONS */
-    .action-btn { position: absolute; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; }
-    .action-btn:hover { transform: scale(1.1); background: var(--pink-light); }
-    #btn-open { top: 70%; left: 50%; transform: translateX(-50%); }
-    #btn-next1 { top: 75%; left: 50%; transform: translateX(-50%); opacity: 0; pointer-events: none; }
+    /* --- BUTTONS (STYLE CHUNG CHO CÁC MŨI TÊN) --- */
+    .action-btn-text { position: absolute; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; top: 70%; left: 50%; transform: translateX(-50%); }
+    .action-btn-text:hover { transform: translate(-50%) scale(1.1); background: var(--pink-light); }
 
-    /* MŨI TÊN HỒNG XUỐNG CẢNH 3 */
-    #btn-down-arrow {
-        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-        background: none; border: none; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none;
-        animation: bounceArrow 1.5s infinite;
+    .arrow-btn {
+        position: fixed; background: none; border: none; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none;
+        transition: opacity 0.5s;
     }
-    #btn-down-arrow svg {
+    .arrow-btn svg {
         width: 60px; height: 60px; fill: var(--pink-main);
         filter: drop-shadow(0 0 10px var(--pink-main)) drop-shadow(0 0 20px var(--pink-glow));
     }
-    @keyframes bounceArrow { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-20px);} 60% {transform: translateX(-50%) translateY(-10px);} }
 
-    /* --- SCENE 3: CANVAS THỦ KHOA LÝ (NỀN ĐEN TUYỀN) --- */
-    #scene3 { width: 100vw; height: 100vh; position: relative; background: #000; }
+    /* Mũi tên phải (Scene 1 -> 2) */
+    #btn-next-right {
+        top: 75%; left: 50%;
+        animation: bounceRight 1.5s infinite;
+    }
+    @keyframes bounceRight {
+        0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateX(0);}
+        40% {transform: translateX(-50%) translateX(20px);}
+        60% {transform: translateX(-50%) translateX(10px);}
+    }
+
+    /* Mũi tên xuống (Scene 2 -> 3) */
+    #btn-down-arrow {
+        bottom: 30px; left: 50%;
+        animation: bounceDown 1.5s infinite;
+    }
+    @keyframes bounceDown {
+        0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
+        40% {transform: translateX(-50%) translateY(-20px);}
+        60% {transform: translateX(-50%) translateY(-10px);}
+    }
+
+    /* --- SCENE 3: CANVAS THỦ KHOA LÝ (NỀN TRONG SUỐT ĐỂ HIỆN SAO) --- */
+    #scene3 { width: 100vw; height: 100vh; position: relative; background: transparent; }
     canvas {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; background: transparent;
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
@@ -112,8 +130,11 @@
                     </div>
                 </div>
             </div>
-            <button class="action-btn" id="btn-open" onclick="openLetter()">Nhấn để mở quà 💌</button>
-            <button class="action-btn" id="btn-next1" onclick="goToScene2()">Bấm để tiếp tục 👉</button>
+            <button class="action-btn-text" id="btn-open" onclick="openLetter()">Nhấn để mở quà 💌</button>
+            
+            <button id="btn-next-right" class="arrow-btn" onclick="goToScene2()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+            </button>
 
             <div class="garden">
                 <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
@@ -134,7 +155,7 @@
     </div>
 </div>
 
-<button id="btn-down-arrow" onclick="scrollDownToScene3()">
+<button id="btn-down-arrow" class="arrow-btn" onclick="scrollDownToScene3()">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15.6315L20.9679 6.66357L22.3822 8.07779L12 18.4599L1.61783 8.07779L3.03212 6.66357L12 15.6315Z"></path></svg>
 </button>
 
@@ -154,11 +175,11 @@
     ];
 
     const universe = document.getElementById('universe');
-    // Chỉ tạo sao ở screen 1
-    for(let i=0; i<100; i++) {
+    // Tạo sao rải đều khắp 200vh chiều cao vũ trụ
+    for(let i=0; i<150; i++) {
         let s = document.createElement('div'); s.className = 'star';
         s.style.width = s.style.height = Math.random() * 2 + 'px';
-        s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 100 + 'vh'; // Chỉ ở 100vh đầu
+        s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 200 + 'vh';
         universe.appendChild(s);
     }
     setInterval(() => {
@@ -216,7 +237,7 @@
                 typeLine('line2', "Em là điều tuyệt vời nhất!", 50, () => {
                     typeLine('line3', "Cảm ơn em đã ở bên anh 🥰", 50, () => {
                         typeLine('line4', "Anh yêu em rất nhiều 💕", 60, () => {
-                            const nextBtn = document.getElementById('btn-next1');
+                            const nextBtn = document.getElementById('btn-next-right');
                             nextBtn.style.opacity = '1'; nextBtn.style.pointerEvents = 'auto';
                         });
                     });
@@ -227,8 +248,8 @@
 
     function goToScene2() {
         document.body.classList.add('in-scene2');
-        document.getElementById('btn-next1').style.opacity = '0';
-        document.getElementById('btn-next1').style.pointerEvents = 'none';
+        document.getElementById('btn-next-right').style.opacity = '0';
+        document.getElementById('btn-next-right').style.pointerEvents = 'none';
         setTimeout(() => { shootTextFromLeft(); }, 1500);
     }
 
@@ -274,19 +295,15 @@
         }, points.length * 10 + 2000);
     }
 
-    // --- LƯỚT XUỐNG CẢNH 3 (NỀN ĐEN TUYỀN) ---
     function scrollDownToScene3() {
         document.getElementById('btn-down-arrow').style.opacity = '0';
         document.getElementById('btn-down-arrow').style.pointerEvents = 'none';
         document.getElementById('universe').style.transform = 'translateY(-100vh)';
-        
-        setTimeout(() => { 
-            initLiXunHeart(); 
-        }, 1500);
+        setTimeout(() => { initLiXunHeart(); }, 1500);
     }
 
     // -----------------------------------------------------------------
-    // THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" (NỀN ĐEN)
+    // THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" (NỀN TRONG SUỐT HIỆN SAO)
     // -----------------------------------------------------------------
     function initLiXunHeart() {
         var canvas = document.getElementById('pinkboard');
@@ -314,7 +331,7 @@
                 var t = Math.random() * Math.PI * 2;
                 var pos = pointOnHeart(t);
                 var dir = Math.random() * Math.PI * 2;
-                var spread = Math.random() * 40; // Giảm spread một chút để tim gọn hơn
+                var spread = Math.random() * 40; 
                 if(Math.random() < 0.5) spread *= Math.random() * 2; 
 
                 this.x = pos.x + Math.cos(dir) * spread;
@@ -330,7 +347,7 @@
             }
             draw(ctx, scale) {
                 var opacity = 1 - (this.life / this.maxLife);
-                ctx.fillStyle = `rgba(255, 0, 85, ${opacity})`; // Màu hồng neon nguyên bản
+                ctx.fillStyle = `rgba(255, 0, 85, ${opacity})`;
                 
                 var drawX = (canvas.width / 2) + this.x * scale;
                 var drawY = (canvas.height / 2) + this.y * scale;
@@ -345,10 +362,14 @@
         }
 
         function render() {
-            // BÍ KÍP NỀN ĐEN TUYỀN Ở ĐÂY:
-            // Thay vì dùng độ trong suốt 0.3, dùng 0.45 để lớp đen phủ lên nhanh hơn, làm tối nền hơn.
-            context.fillStyle = 'rgba(0, 0, 0, 0.45)'; 
+            // BÍ KÍP NỀN TRONG SUỐT Ở ĐÂY:
+            // Sử dụng 'destination-out' để xóa mờ dần các vệt sáng cũ, làm lộ ra nền sao bên dưới
+            context.globalCompositeOperation = 'destination-out';
+            context.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Độ mờ của vệt sáng (số càng nhỏ vệt càng dài)
             context.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Đặt lại chế độ vẽ bình thường cho các hạt mới
+            context.globalCompositeOperation = 'source-over';
 
             time += 0.05;
             var scale = 1 + 0.15 * Math.pow(Math.sin(time * 1.5), 6); 
