@@ -63,11 +63,11 @@
     #cute-cat { position: absolute; left: -180px; bottom: 10px; width: 150px; height: auto; transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
     body.in-scene2 #cute-cat { left: -10px; }
     
-    /* CẬP NHẬT TRÁI TIM TẠO CHỮ: Chỉnh size nhỏ lại xíu để nét chữ thanh thoát hơn */
+    /* 🔴 ĐÃ SỬA: Tăng font-size lên 13px để tim to và chữ dày hơn */
     .mini-heart { 
-        position: absolute; color: var(--pink-main); font-size: 11px; pointer-events: none; z-index: 15; 
+        position: absolute; color: var(--pink-main); font-size: 13px; pointer-events: none; z-index: 15; 
         transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.5s ease; 
-        filter: drop-shadow(0 0 3px rgba(255, 77, 109, 0.8)); 
+        filter: drop-shadow(0 0 4px rgba(255, 77, 109, 0.8)); 
         opacity: 1;
     }
 
@@ -254,31 +254,28 @@
         btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
     }
 
-    // --- CẬP NHẬT THUẬT TOÁN TẠO CHỮ CỰC NÉT, RÕ RÀNG ---
+    // --- CẬP NHẬT THUẬT TOÁN TẠO CHỮ CỰC DÀY ---
     function getTextPoints(lines) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         
-        // Cài font siêu to để lấy viền chữ chuẩn nhất
         ctx.font = '900 120px Quicksand'; 
         
-        // Tự động đo chiều ngang để tạo canvas vừa khít chữ
         let maxW = 0;
         lines.forEach(line => {
             let w = ctx.measureText(line).width;
             if(w > maxW) maxW = w;
         });
         
-        canvas.width = maxW + 100; // Thêm lề trái phải
+        canvas.width = maxW + 100; 
         canvas.height = lines.length * 150 + 50; 
         
-        // Phải gán lại font sau khi set size canvas
         ctx.font = '900 120px Quicksand'; 
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        const lineSpacing = 140; // Giãn khoảng cách giữa 2 dòng
+        const lineSpacing = 140; 
         let startY = (canvas.height - (lines.length - 1) * lineSpacing) / 2;
 
         lines.forEach((line, index) => {
@@ -288,8 +285,8 @@
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
         
-        // Bước nhảy 13px giúp khoảng cách tim được tách bạch, chữ hiện ra thanh thoát
-        const step = 13; 
+        // 🔴 ĐÃ SỬA: Giảm bước nhảy từ 13 xuống 9 để tạo ra mật độ tim dày đặc hơn
+        const step = 9; 
         for (let y = 0; y < canvas.height; y += step) {
             for (let x = 0; x < canvas.width; x += step) {
                 if (imageData[(y * canvas.width + x) * 4 + 3] > 128) {
@@ -298,7 +295,6 @@
             }
         }
         
-        // Trả về kèm chiều rộng gốc để tính tỉ lệ phóng to
         return { points, baseWidth: canvas.width };
     }
 
@@ -311,13 +307,12 @@
             
             let hearts = [];
             
-            // --- THUẬT TOÁN TỰ ĐỘNG PHÓNG TO CHỮ VỪA KHÍT MÀN HÌNH ---
-            let availableWidth = window.innerWidth * 0.9; // Chữ chiếm tối đa 90% màn hình
+            let availableWidth = window.innerWidth * 0.9; 
             let scaleFactor = availableWidth / baseWidth;
-            if (scaleFactor > 0.8) scaleFactor = 0.8; // Giới hạn độ to tối đa để không chói mắt trên máy tính
+            if (scaleFactor > 0.8) scaleFactor = 0.8; 
 
-            // Giới hạn số lượng tim để chạy mượt
-            let maxPoints = 350;
+            // 🔴 ĐÃ SỬA: Nâng giới hạn tim lên 600 để lấy đủ số tim cho nét dày
+            let maxPoints = 600;
             let filteredPoints = points;
             if (points.length > maxPoints) {
                 let step = Math.ceil(points.length / maxPoints);
@@ -336,12 +331,13 @@
                 let destX = centerX + (pt.x * scaleFactor); 
                 let destY = centerY + (pt.y * scaleFactor);
                 
+                // 🔴 ĐÃ SỬA: Tăng tốc độ bắn (chỉ delay 3ms) để không phải đợi lâu khi số tim nhiều lên
                 setTimeout(() => { 
                     heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`; 
-                }, i * 5); 
+                }, i * 3); 
             });
 
-            const shootTime = filteredPoints.length * 5;
+            const shootTime = filteredPoints.length * 3;
             const readTime = 2500; 
             
             setTimeout(() => {
