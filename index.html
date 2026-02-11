@@ -16,30 +16,25 @@
     
     body { margin: 0; overflow: hidden; background: #000; }
     
-    /* VŨ TRỤ CHỨA SAO VÀ TIM BAY (Chung cho cả 2 màn hình) */
     #universe { 
-        width: 100vw; height: 200vh; /* Cao gấp đôi để lướt xuống */
-        /* Nền chuyển từ xanh đen sang đen tuyền, chứa sao */
+        width: 100vw; height: 200vh; 
         background: linear-gradient(to bottom, #1b1b3a 0%, #000000 60%, #000000 100%);
         transition: transform 2.5s cubic-bezier(0.65, 0, 0.35, 1);
     }
     
     .screen { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
 
-    /* CÁC LỚP CẢNH */
     .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: opacity 1.5s ease; }
     #scene1 { z-index: 2; opacity: 1; }
     #scene2 { z-index: 1; opacity: 0; pointer-events: none; }
     body.in-scene2 #scene1 { opacity: 0; pointer-events: none; }
     body.in-scene2 #scene2 { opacity: 1; pointer-events: auto; z-index: 10; }
 
-    /* BACKGROUND ELEMENTS */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
     @keyframes floatUp { 0% { transform: translateY(110vh) scale(0.5); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
     
-    /* SCENE 1 ELEMENTS */
     .envelope-wrapper { position: relative; width: 300px; height: 200px; z-index: 100; perspective: 1000px; margin-top: 50px; }
     .envelope { position: relative; width: 100%; height: 100%; background: #ffffff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
     .envelope::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 30; background: #fff; clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
@@ -67,9 +62,17 @@
     /* MÈO BẮN CHỮ */
     #cute-cat { position: absolute; left: -180px; bottom: 10px; width: 150px; height: auto; transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
     body.in-scene2 #cute-cat { left: -10px; }
-    .mini-heart { position: absolute; color: var(--pink-main); font-size: 14px; pointer-events: none; z-index: 15; transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1); filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); }
+    
+    /* CSS Cập nhật cho hạt tim để có thể Fade out mềm mại */
+    .mini-heart { 
+        position: absolute; color: var(--pink-main); font-size: 14px; pointer-events: none; z-index: 15; 
+        /* Tách transform và opacity để lúc fade out tim vẫn giữ nguyên vị trí, không bị giật */
+        transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.5s ease; 
+        filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); 
+        opacity: 1;
+    }
 
-    /* --- BUTTONS (STYLE CHUNG CHO CÁC MŨI TÊN) --- */
+    /* BUTTONS */
     .action-btn-text { position: absolute; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; top: 70%; left: 50%; transform: translateX(-50%); }
     .action-btn-text:hover { transform: translate(-50%) scale(1.1); background: var(--pink-light); }
 
@@ -77,38 +80,17 @@
         position: fixed; background: none; border: none; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none;
         transition: opacity 0.5s;
     }
-    .arrow-btn svg {
-        width: 60px; height: 60px; fill: var(--pink-main);
-        filter: drop-shadow(0 0 10px var(--pink-main)) drop-shadow(0 0 20px var(--pink-glow));
-    }
+    .arrow-btn svg { width: 60px; height: 60px; fill: var(--pink-main); filter: drop-shadow(0 0 10px var(--pink-main)) drop-shadow(0 0 20px var(--pink-glow)); }
 
-    /* Mũi tên phải (Scene 1 -> 2) */
-    #btn-next-right {
-        top: 75%; left: 50%;
-        animation: bounceRight 1.5s infinite;
-    }
-    @keyframes bounceRight {
-        0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateX(0);}
-        40% {transform: translateX(-50%) translateX(20px);}
-        60% {transform: translateX(-50%) translateX(10px);}
-    }
+    #btn-next-right { top: 75%; left: 50%; animation: bounceRight 1.5s infinite; }
+    @keyframes bounceRight { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateX(0);} 40% {transform: translateX(-50%) translateX(20px);} 60% {transform: translateX(-50%) translateX(10px);} }
 
-    /* Mũi tên xuống (Scene 2 -> 3) */
-    #btn-down-arrow {
-        bottom: 30px; left: 50%;
-        animation: bounceDown 1.5s infinite;
-    }
-    @keyframes bounceDown {
-        0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);}
-        40% {transform: translateX(-50%) translateY(-20px);}
-        60% {transform: translateX(-50%) translateY(-10px);}
-    }
+    #btn-down-arrow { bottom: 30px; left: 50%; animation: bounceDown 1.5s infinite; }
+    @keyframes bounceDown { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-20px);} 60% {transform: translateX(-50%) translateY(-10px);} }
 
-    /* --- SCENE 3: CANVAS THỦ KHOA LÝ (NỀN TRONG SUỐT ĐỂ HIỆN SAO) --- */
+    /* CANVAS THỦ KHOA LÝ */
     #scene3 { width: 100vw; height: 100vh; position: relative; background: transparent; }
-    canvas {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; background: transparent;
-    }
+    canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; background: transparent; }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
 </head>
@@ -175,7 +157,6 @@
     ];
 
     const universe = document.getElementById('universe');
-    // Tạo sao rải đều khắp 200vh chiều cao vũ trụ
     for(let i=0; i<150; i++) {
         let s = document.createElement('div'); s.className = 'star';
         s.style.width = s.style.height = Math.random() * 2 + 'px';
@@ -197,6 +178,7 @@
         type();
     }
 
+    // --- LOGIC MỞ THƯ VÀ ĐẢO ẢNH ---
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn-open').style.opacity = '0';
@@ -246,55 +228,129 @@
         }, 1200);
     }
 
-    function goToScene2() {
+    // --- KỊCH BẢN CHỮ DÀNH CHO SCENE 2 ---
+    const storyline = [
+        ["Gửi em Nu"],
+        ["Ngày hôm nay", "của em thế nào?"],
+        ["Nhưng dù cho có", "thế nào đi nữa"],
+        ["Em vẫn sẽ luôn có", "anh Zinh bên cạnh"],
+        ["Anh sẽ luôn", "yêu thương"],
+        ["sẽ luôn", "quan tâm em"],
+        ["Nên là"],
+        ["Em phải thiệt vui", "đó biết hong"],
+        ["Happy Valentine,", "my girl"]
+    ];
+
+    async function goToScene2() {
         document.body.classList.add('in-scene2');
         document.getElementById('btn-next-right').style.opacity = '0';
         document.getElementById('btn-next-right').style.pointerEvents = 'none';
-        setTimeout(() => { shootTextFromLeft(); }, 1500);
+        
+        // Đợi 1.5s cho mèo chui ra
+        await new Promise(r => setTimeout(r, 1500));
+        
+        // Chạy lần lượt từng câu nói
+        for (let lines of storyline) {
+            await shootSinglePhrase(lines);
+        }
+
+        // Hiện nút đi xuống cảnh 3
+        const btnDown = document.getElementById('btn-down-arrow');
+        btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
     }
 
-    function getTextPoints() {
+    // Hàm lấy tọa độ điểm từ Canvas dựa trên mảng chữ
+    function getTextPoints(lines) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
-        canvas.width = 800; canvas.height = 300; 
+        canvas.width = 1000; canvas.height = 400; // Khung to để chứa chữ dài
         ctx.fillStyle = 'black';
-        ctx.font = '900 85px Quicksand'; 
+        ctx.font = '900 65px Quicksand'; 
         ctx.textAlign = 'center';
-        ctx.fillText("Happy", 400, 110);
-        ctx.fillText("Valentine", 400, 210);
+        ctx.textBaseline = 'middle';
+
+        // Tính toán để căn giữa chữ theo chiều dọc
+        const lineSpacing = 80;
+        const totalHeight = lines.length * lineSpacing;
+        let startY = (canvas.height - totalHeight) / 2 + (lineSpacing / 2);
+
+        lines.forEach((line, index) => {
+            ctx.fillText(line, canvas.width / 2, startY + index * lineSpacing);
+        });
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
+        // Quét với bước nhảy 6 để không bị quá tải tim
         for (let y = 0; y < canvas.height; y += 6) {
             for (let x = 0; x < canvas.width; x += 6) {
                 if (imageData[(y * canvas.width + x) * 4 + 3] > 128) {
-                    points.push({ x: x - 400, y: y - 150 });
+                    points.push({ x: x - canvas.width/2, y: y - canvas.height/2 });
                 }
             }
         }
         return points;
     }
 
-    function shootTextFromLeft() {
-        const points = getTextPoints();
-        const scene2 = document.getElementById('scene2');
-        const startX = 80; const startY = window.innerHeight - 50; 
-        const centerX = window.innerWidth / 2 + 20; const centerY = window.innerHeight / 2 - 50; 
+    // Hàm bắn và ẩn 1 câu nói
+    function shootSinglePhrase(lines) {
+        return new Promise(resolve => {
+            const points = getTextPoints(lines);
+            const scene2 = document.getElementById('scene2');
+            const startX = 80; const startY = window.innerHeight - 50; 
+            const centerX = window.innerWidth / 2 + 20; const centerY = window.innerHeight / 2 - 50; 
+            
+            let hearts = [];
+            // Điều chỉnh kích thước chữ cho vừa điện thoại (Scale nhỏ lại)
+            let scaleFactor = window.innerWidth < 600 ? 0.45 : 0.8; 
 
-        points.forEach((pt, i) => {
-            let heart = document.createElement('div'); heart.className = 'mini-heart'; heart.innerHTML = '❤️';
-            heart.style.left = startX + 'px'; heart.style.top = startY + 'px'; heart.style.transform = `translate(-50%, -50%) scale(0)`;
-            scene2.appendChild(heart);
-            let destX = centerX + (pt.x * 0.9); let destY = centerY + (pt.y * 0.9);
-            setTimeout(() => { heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`; }, i * 10); 
+            // Giới hạn số lượng tim để web không bị lag (nếu chữ quá dài)
+            let maxPoints = 400;
+            let filteredPoints = points;
+            if (points.length > maxPoints) {
+                let step = Math.ceil(points.length / maxPoints);
+                filteredPoints = points.filter((_, i) => i % step === 0);
+            }
+
+            // Bắn tim
+            filteredPoints.forEach((pt, i) => {
+                let heart = document.createElement('div'); 
+                heart.className = 'mini-heart'; 
+                heart.innerHTML = '❤️';
+                heart.style.left = startX + 'px'; heart.style.top = startY + 'px'; 
+                heart.style.transform = `translate(-50%, -50%) scale(0)`;
+                scene2.appendChild(heart);
+                hearts.push(heart);
+
+                let destX = centerX + (pt.x * scaleFactor); 
+                let destY = centerY + (pt.y * scaleFactor);
+                
+                setTimeout(() => { 
+                    heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1) rotate(0deg)`; 
+                }, i * 4); // Bắn cực nhanh (4ms/viên)
+            });
+
+            // Tổng thời gian bắn + Thời gian nán lại để đọc (2.5 giây)
+            const shootTime = filteredPoints.length * 4;
+            const readTime = 2500; 
+            
+            setTimeout(() => {
+                // Làm mờ dần và bay lên nhẹ
+                hearts.forEach(h => {
+                    h.style.opacity = '0';
+                    h.style.transform += ' translateY(-30px)'; 
+                });
+                
+                // Sau khi mờ hẳn (1.5s), xóa khỏi HTML và báo hiệu cho câu tiếp theo chạy
+                setTimeout(() => {
+                    hearts.forEach(h => h.remove());
+                    resolve();
+                }, 1500); 
+
+            }, shootTime + readTime);
         });
-
-        setTimeout(() => {
-            const btnDown = document.getElementById('btn-down-arrow');
-            btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
-        }, points.length * 10 + 2000);
     }
 
+    // --- LƯỚT XUỐNG CẢNH 3 ---
     function scrollDownToScene3() {
         document.getElementById('btn-down-arrow').style.opacity = '0';
         document.getElementById('btn-down-arrow').style.pointerEvents = 'none';
@@ -302,9 +358,7 @@
         setTimeout(() => { initLiXunHeart(); }, 1500);
     }
 
-    // -----------------------------------------------------------------
-    // THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" (NỀN TRONG SUỐT HIỆN SAO)
-    // -----------------------------------------------------------------
+    // --- THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" ---
     function initLiXunHeart() {
         var canvas = document.getElementById('pinkboard');
         var context = canvas.getContext('2d');
@@ -312,10 +366,7 @@
         var particleRate = 400; 
         var time = 0;
 
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resize);
         resize();
 
@@ -336,55 +387,34 @@
 
                 this.x = pos.x + Math.cos(dir) * spread;
                 this.y = -pos.y + Math.sin(dir) * spread; 
-                
                 this.size = Math.random() * 2 + 1.5; 
                 this.life = 0;
                 this.maxLife = Math.random() * 100 + 50;
             }
-            update() {
-                this.life++;
-                return this.life < this.maxLife;
-            }
+            update() { this.life++; return this.life < this.maxLife; }
             draw(ctx, scale) {
                 var opacity = 1 - (this.life / this.maxLife);
                 ctx.fillStyle = `rgba(255, 0, 85, ${opacity})`;
-                
                 var drawX = (canvas.width / 2) + this.x * scale;
                 var drawY = (canvas.height / 2) + this.y * scale;
-
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = "#ff0055";
-
-                ctx.beginPath();
-                ctx.arc(drawX, drawY, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.shadowBlur = 10; ctx.shadowColor = "#ff0055";
+                ctx.beginPath(); ctx.arc(drawX, drawY, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
 
         function render() {
-            // BÍ KÍP NỀN TRONG SUỐT Ở ĐÂY:
-            // Sử dụng 'destination-out' để xóa mờ dần các vệt sáng cũ, làm lộ ra nền sao bên dưới
             context.globalCompositeOperation = 'destination-out';
-            context.fillStyle = 'rgba(0, 0, 0, 0.1)'; // Độ mờ của vệt sáng (số càng nhỏ vệt càng dài)
+            context.fillStyle = 'rgba(0, 0, 0, 0.1)'; 
             context.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Đặt lại chế độ vẽ bình thường cho các hạt mới
             context.globalCompositeOperation = 'source-over';
 
             time += 0.05;
             var scale = 1 + 0.15 * Math.pow(Math.sin(time * 1.5), 6); 
 
-            for (let i = 0; i < particleRate / 10; i++) {
-                particles.push(new Particle());
-            }
-
+            for (let i = 0; i < particleRate / 10; i++) { particles.push(new Particle()); }
             for (let i = 0; i < particles.length; i++) {
-                if (particles[i].update()) {
-                    particles[i].draw(context, scale);
-                } else {
-                    particles.splice(i, 1);
-                    i--;
-                }
+                if (particles[i].update()) { particles[i].draw(context, scale); } 
+                else { particles.splice(i, 1); i--; }
             }
             requestAnimationFrame(render);
         }
