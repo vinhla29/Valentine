@@ -23,26 +23,39 @@
     #scene1 { z-index: 2; opacity: 1; }
     #scene2 { z-index: 1; opacity: 0; pointer-events: none; flex-direction: column; }
     
-    /* Khi chuyển cảnh */
     body.switch-scene #scene1 { opacity: 0; pointer-events: none; }
     body.switch-scene #scene2 { opacity: 1; pointer-events: auto; z-index: 10; }
 
-    /* --- CSS CỦA SCENE 1 (Cũ) --- */
+    /* --- ĐẾM NGƯỢC --- */
+    #countdown-box {
+        position: absolute; top: 12%; left: 50%; transform: translateX(-50%);
+        background: rgba(255, 77, 109, 0.8); color: white;
+        padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: bold;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        opacity: 0; transition: 0.5s; z-index: 1000; pointer-events: none;
+    }
+
+    /* --- CSS CỦA SCENE 1 --- */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; }
     @keyframes floatUp { 0% { transform: translateY(110vh) scale(0.5); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
+    
     .envelope-wrapper { position: relative; width: 300px; height: 200px; z-index: 100; perspective: 1000px; margin-top: 50px; }
     .envelope { position: relative; width: 100%; height: 100%; background: #ffffff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
     .envelope::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 30; background: #fff; clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
     .lid { position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 110px solid #ff9eb5; transform-origin: top; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 40; }
     .envelope.open .lid { transform: rotateX(180deg); z-index: 5; }
+    
     .letter { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 90%; background: #fff; padding: 20px 15px; border-radius: 5px; color: #c9184a; text-align: center; transition: transform 0.8s 0.3s, z-index 0s 0.3s; z-index: 20; background-image: repeating-linear-gradient(white, white 24px, #fde2e8 25px); line-height: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
     .envelope.open .letter { transform: translate(-50%, -240px); z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    .photo-card { position: absolute; width: 100px; background: white; padding: 5px; padding-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; }
+    
+    .photo-card { position: absolute; width: 90px; background: white; padding: 4px; padding-bottom: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; transition: 1.5s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; border-radius: 3px; }
     .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
+    
     .open-btn { position: absolute; top: 70%; padding: 15px 45px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 200; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; }
     .open-btn:hover { transform: scale(1.1); background: var(--pink-light); }
+    
     .garden { position: absolute; bottom: 0; width: 100%; height: 130px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; }
     .tulip { position: relative; animation: sway 4s infinite alternate; transform-origin: bottom; display: flex; flex-direction: column; align-items: center; }
     @keyframes sway { from {transform: rotate(-2deg)} to {transform: rotate(2deg)} }
@@ -58,32 +71,28 @@
     .leaf.right { right: -20px; transform: rotate(35deg); }
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
 
-    /* --- CSS CỦA SCENE 2 (Mới) --- */
-    /* Vị trí chữ mục tiêu (ẩn đi, chỉ dùng để lấy tọa độ) */
-    #target-text-box {
-        position: absolute; top: 30%;
-        font-size: 5rem; font-weight: 900; color: transparent;
-        text-align: center; width: 80%; user-select: none;
-    }
-    /* Con mèo */
+    /* --- CSS CỦA SCENE 2 --- */
     #cute-cat {
-        position: absolute; bottom: -200px; /* Ẩn dưới màn hình */
-        width: 200px; height: auto;
+        position: absolute; bottom: -200px;
+        width: 150px; height: auto;
         transition: bottom 1s ease-out; z-index: 20;
         filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
     }
-    body.switch-scene #cute-cat { bottom: 20px; /* Trồi lên khi chuyển cảnh */ }
+    body.switch-scene #cute-cat { bottom: 10px; }
 
-    /* Tim nhỏ bắn ra */
+    /* Trái tim tạo thành chữ */
     .mini-heart {
         position: absolute; color: var(--pink-main);
-        font-size: 20px; pointer-events: none; z-index: 15;
-        transition: all 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        font-size: 16px; pointer-events: none; z-index: 15;
+        transition: all 2s cubic-bezier(0.25, 1, 0.5, 1); /* Bay mượt mà */
+        filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); /* Chữ sáng lên */
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<div id="countdown-box">Chờ anh <span id="time">10</span> giây nhé 🥰</div>
 
 <div class="scene" id="scene1">
     <div class="envelope-wrapper">
@@ -97,9 +106,7 @@
             </div>
         </div>
     </div>
-
     <button class="open-btn" id="btn" onclick="openLetter()">Nhấn để mở quà 💌</button>
-
     <div class="garden">
         <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
         <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 70px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
@@ -108,23 +115,23 @@
 </div>
 
 <div class="scene" id="scene2">
-    <div id="target-text-box">I LOVE YOU</div>
-    
     <img id="cute-cat" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ5bnZ6bm1oam1oam1oam1oam1oam1oam1oam1oam1oam1oYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MDJ9Ibxx54XB9D9u1h/giphy.gif" alt="Cute Cat">
 </div>
 
 <script>
-    // 1. DANH SÁCH ẢNH CỦA CẢNH 1
+    // 1. DANH SÁCH ẢNH
     const photos = [
-        "https://via.placeholder.com/150x150/ffb3c1/fff?text=Love+1",
-        "https://via.placeholder.com/150x150/ffafcc/fff?text=Love+2",
-        "https://via.placeholder.com/150x150/ffc8dd/fff?text=Love+3",
-        "https://via.placeholder.com/150x150/cdb4db/fff?text=Love+4",
-        "https://via.placeholder.com/150x150/a2d2ff/fff?text=Love+5",
-        "https://via.placeholder.com/150x150/bde0fe/fff?text=Love+6"
+        "https://via.placeholder.com/150x150/ffb3c1/fff?text=Anh+1",
+        "https://via.placeholder.com/150x150/ffafcc/fff?text=Anh+2",
+        "https://via.placeholder.com/150x150/ffc8dd/fff?text=Anh+3",
+        "https://via.placeholder.com/150x150/cdb4db/fff?text=Anh+4",
+        "https://via.placeholder.com/150x150/a2d2ff/fff?text=Anh+5",
+        "https://via.placeholder.com/150x150/bde0fe/fff?text=Anh+6",
+        "https://via.placeholder.com/150x150/8ecae6/fff?text=Anh+7",
+        "https://via.placeholder.com/150x150/219ebc/fff?text=Anh+8"
     ];
 
-    // Decor Stars & Hearts (Chạy chung cho cả 2 cảnh)
+    // Decor Chung
     for(let i=0; i<60; i++) {
         let s = document.createElement('div'); s.className = 'star';
         s.style.width = s.style.height = Math.random() * 2 + 'px';
@@ -137,79 +144,131 @@
         document.body.appendChild(h); setTimeout(() => h.remove(), 6000);
     }, 500);
 
-    // --- CHỨC NĂNG CHÍNH ---
+    // --- LOGIC MỞ THƯ & ĐẾM NGƯỢC ---
     function openLetter() {
-        // Cảnh 1: Mở thư & bung ảnh
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
-        photos.forEach((url, i) => { createPhoto(url, i, photos.length); });
 
-        // ĐẶT LỊCH CHUYỂN CẢNH: Sau 12 giây sẽ chuyển sang cảnh mèo
+        // Bung ảnh
+        const total = photos.length;
+        const radius = 200;
+        photos.forEach((url, i) => {
+            let img = document.createElement('div'); img.className = 'photo-card';
+            img.innerHTML = `<img src="${url}">`;
+            img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
+            document.getElementById('scene1').appendChild(img);
+            
+            let angle = (i / total) * Math.PI * 2;
+            let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40;
+            let randomRot = (Math.random() - 0.5) * 30;
+            img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${randomRot}deg`);
+            
+            setTimeout(() => {
+                img.style.opacity = '1'; img.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${randomRot}deg)`;
+                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500);
+            }, i * 150);
+        });
+
+        // Kích hoạt đếm ngược sau 2 giây (để bung ảnh xong)
         setTimeout(() => {
-            switchScene();
-        }, 12000); 
+            const countBox = document.getElementById('countdown-box');
+            const timeSpan = document.getElementById('time');
+            countBox.style.opacity = '1';
+            let timeLeft = 10;
+            
+            let timer = setInterval(() => {
+                timeLeft--;
+                timeSpan.innerText = timeLeft;
+                if(timeLeft <= 0) {
+                    clearInterval(timer);
+                    countBox.style.opacity = '0';
+                    switchScene();
+                }
+            }, 1000);
+        }, 2000);
     }
 
-    function createPhoto(url, i, total) {
-        let img = document.createElement('div'); img.className = 'photo-card';
-        img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '40%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
-        document.getElementById('scene1').appendChild(img);
-        let angle = (i / total) * Math.PI * 2; let radius = 220;
-        let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 50;
-        let randomRot = (Math.random() - 0.5) * 30;
-        img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${randomRot}deg`);
-        setTimeout(() => {
-            img.style.opacity = '1'; img.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${randomRot}deg)`;
-            setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500);
-        }, i * 150);
-    }
-
-    // --- CHỨC NĂNG CẢNH 2 (MÈO BẮN TIM) ---
+    // --- CẢNH 2: GHÉP CHỮ BẰNG MA TRẬN TỌA ĐỘ ---
     function switchScene() {
-        document.body.classList.add('switch-scene'); // Kích hoạt CSS chuyển cảnh
-        
-        // Sau khi mèo trồi lên (1s), bắt đầu bắn tim
+        document.body.classList.add('switch-scene');
         setTimeout(() => {
             catShootHearts();
-        }, 1500);
+        }, 1200);
     }
 
     function catShootHearts() {
-        const cat = document.getElementById('cute-cat');
-        const targetBox = document.getElementById('target-text-box');
-        const catRect = cat.getBoundingClientRect();
-        const targetRect = targetBox.getBoundingClientRect();
+        // MA TRẬN HÌNH CHỮ "I LOVE" VÀ "YOU" BẰNG SỐ 1
+        const patternILOVE = [
+            "111 0 100 0 010 0 101 0 111",
+            "010 0 100 0 101 0 101 0 100",
+            "010 0 100 0 101 0 101 0 111",
+            "010 0 100 0 101 0 101 0 100",
+            "111 0 111 0 010 0 010 0 111"
+        ];
+        const patternYOU = [
+            "101 0 010 0 101",
+            "101 0 101 0 101",
+            "010 0 101 0 101",
+            "010 0 101 0 101",
+            "010 0 010 0 111"
+        ];
+
+        let targetPoints = [];
+        const gap = 15; // Khoảng cách giữa các trái tim (pixels)
         
-        // Vị trí miệng mèo (khoảng giữa ảnh)
-        const startX = catRect.left + catRect.width / 2;
-        const startY = catRect.top + 20;
+        // 1. Dịch tọa độ chữ I LOVE
+        const colsILOVE = patternILOVE[0].length;
+        const startX_ILOVE = - (colsILOVE * gap) / 2;
+        const startY_ILOVE = -80; // Dịch lên trên một chút
+        
+        for(let r=0; r<patternILOVE.length; r++) {
+            for(let c=0; c<patternILOVE[r].length; c++) {
+                if(patternILOVE[r][c] === '1') {
+                    targetPoints.push({ x: startX_ILOVE + c * gap, y: startY_ILOVE + r * gap });
+                }
+            }
+        }
 
-        const numberOfHearts = 150; // Số lượng tim bắn ra
+        // 2. Dịch tọa độ chữ YOU
+        const colsYOU = patternYOU[0].length;
+        const startX_YOU = - (colsYOU * gap) / 2;
+        const startY_YOU = startY_ILOVE + 6 * gap; // Xuống dòng
+        
+        for(let r=0; r<patternYOU.length; r++) {
+            for(let c=0; c<patternYOU[r].length; c++) {
+                if(patternYOU[r][c] === '1') {
+                    targetPoints.push({ x: startX_YOU + c * gap, y: startY_YOU + r * gap });
+                }
+            }
+        }
 
-        for (let i = 0; i < numberOfHearts; i++) {
+        // Tọa độ bắn (Miệng con mèo)
+        const startX = window.innerWidth / 2;
+        const startY = window.innerHeight - 80;
+
+        // Tọa độ tâm màn hình để căn giữa chữ
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2 - 30;
+
+        // Bắn từng trái tim đến đúng tọa độ trong ma trận
+        targetPoints.forEach((pt, i) => {
             let heart = document.createElement('div');
             heart.className = 'mini-heart';
             heart.innerHTML = '❤️';
-            // Xuất phát từ mèo
             heart.style.left = startX + 'px';
             heart.style.top = startY + 'px';
-            // Random kích thước và góc xoay ban đầu
-            let scale = 0.5 + Math.random() * 0.5;
-            heart.style.transform = `translate(-50%, -50%) scale(0) rotate(${Math.random()*360}deg)`;
+            heart.style.transform = `translate(-50%, -50%) scale(0)`;
             
             document.getElementById('scene2').appendChild(heart);
 
-            // Đích đến: Một điểm ngẫu nhiên nằm trong khung chữ "I LOVE YOU"
-            let destX = targetRect.left + Math.random() * targetRect.width;
-            let destY = targetRect.top + Math.random() * targetRect.height;
-            let finalRot = (Math.random() - 0.5) * 60;
+            let destX = centerX + pt.x;
+            let destY = centerY + pt.y;
 
-            // Bắn lần lượt
             setTimeout(() => {
-                heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(${scale}) rotate(${finalRot}deg)`;
-            }, i * 20); // Tim bay ra cách nhau 20ms
-        }
+                heart.style.transform = `translate(calc(${destX}px - ${startX}px), calc(${destY}px - ${startY}px)) scale(1.2) rotate(0deg)`;
+            }, i * 30); // Bắn liên tục mỗi 30ms
+        });
     }
 </script>
 </body>
