@@ -18,7 +18,8 @@
     
     #universe { 
         width: 100vw; height: 200vh; 
-        background: radial-gradient(circle at top, #1b1b3a, #000000 70%);
+        /* Phần trên xanh đen, phần dưới đen tuyền */
+        background: linear-gradient(to bottom, #1b1b3a 0%, #000000 50%, #000000 100%);
         transition: transform 2.5s cubic-bezier(0.65, 0, 0.35, 1);
     }
     
@@ -31,7 +32,7 @@
     body.in-scene2 #scene1 { opacity: 0; pointer-events: none; }
     body.in-scene2 #scene2 { opacity: 1; pointer-events: auto; z-index: 10; }
 
-    /* BACKGROUND */
+    /* BACKGROUND SCENE 1 & 2 */
     .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
     @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
@@ -85,13 +86,10 @@
     }
     @keyframes bounceArrow { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-20px);} 60% {transform: translateX(-50%) translateY(-10px);} }
 
-    /* --- SCENE 3: CANVAS THỦ KHOA LÝ --- */
-    #scene3 { width: 100vw; height: 100vh; position: relative; background: #000; } /* Nền đen để tim phát sáng rực rỡ */
+    /* --- SCENE 3: CANVAS THỦ KHOA LÝ (NỀN ĐEN TUYỀN) --- */
+    #scene3 { width: 100vw; height: 100vh; position: relative; background: #000; }
     canvas {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        display: block;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block;
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
@@ -156,10 +154,11 @@
     ];
 
     const universe = document.getElementById('universe');
+    // Chỉ tạo sao ở screen 1
     for(let i=0; i<100; i++) {
         let s = document.createElement('div'); s.className = 'star';
         s.style.width = s.style.height = Math.random() * 2 + 'px';
-        s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 200 + 'vh';
+        s.style.left = Math.random() * 100 + 'vw'; s.style.top = Math.random() * 100 + 'vh'; // Chỉ ở 100vh đầu
         universe.appendChild(s);
     }
     setInterval(() => {
@@ -240,7 +239,6 @@
         ctx.fillStyle = 'black';
         ctx.font = '900 85px Quicksand'; 
         ctx.textAlign = 'center';
-        // Chỉ hiện chữ Happy Valentine rõ nét
         ctx.fillText("Happy", 400, 110);
         ctx.fillText("Valentine", 400, 210);
 
@@ -276,29 +274,27 @@
         }, points.length * 10 + 2000);
     }
 
-    // --- LOGIC LƯỚT XUỐNG VÀ KÍCH HOẠT CODE CANVAS THỦ KHOA LÝ ---
+    // --- LƯỚT XUỐNG CẢNH 3 (NỀN ĐEN TUYỀN) ---
     function scrollDownToScene3() {
         document.getElementById('btn-down-arrow').style.opacity = '0';
         document.getElementById('btn-down-arrow').style.pointerEvents = 'none';
         document.getElementById('universe').style.transform = 'translateY(-100vh)';
         
-        // Đợi lướt xong thì bắt đầu gọi hàm vẽ Trái tim Thủ khoa Lý
         setTimeout(() => { 
             initLiXunHeart(); 
         }, 1500);
     }
 
     // -----------------------------------------------------------------
-    // THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" (Lighter & Princess)
+    // THUẬT TOÁN CANVAS TRÁI TIM "THỦ KHOA LÝ" (NỀN ĐEN)
     // -----------------------------------------------------------------
     function initLiXunHeart() {
         var canvas = document.getElementById('pinkboard');
         var context = canvas.getContext('2d');
         var particles = [];
-        var particleRate = 400; // Số lượng hạt mới sinh ra mỗi khung hình
+        var particleRate = 400; 
         var time = 0;
 
-        // Reset kích thước canvas theo màn hình
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
@@ -306,7 +302,6 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Hàm toán học tạo dáng trái tim
         function pointOnHeart(t) {
             return {
                 x: 160 * Math.pow(Math.sin(t), 3),
@@ -314,21 +309,18 @@
             };
         }
 
-        // Lớp Hạt (Particle)
         class Particle {
             constructor() {
                 var t = Math.random() * Math.PI * 2;
                 var pos = pointOnHeart(t);
-                
-                // Hiệu ứng "hào quang" (Halo) - Khuếch tán ngẫu nhiên từ tâm
                 var dir = Math.random() * Math.PI * 2;
-                var spread = Math.random() * 50; 
-                if(Math.random() < 0.5) spread *= Math.random() * 2; // Tạo các hạt bay xa hơn
+                var spread = Math.random() * 40; // Giảm spread một chút để tim gọn hơn
+                if(Math.random() < 0.5) spread *= Math.random() * 2; 
 
                 this.x = pos.x + Math.cos(dir) * spread;
-                this.y = -pos.y + Math.sin(dir) * spread; // Trục Y trong Canvas ngược với tọa độ toán học
+                this.y = -pos.y + Math.sin(dir) * spread; 
                 
-                this.size = Math.random() * 2 + 1.5; // Kích thước hạt sáng
+                this.size = Math.random() * 2 + 1.5; 
                 this.life = 0;
                 this.maxLife = Math.random() * 100 + 50;
             }
@@ -337,15 +329,12 @@
                 return this.life < this.maxLife;
             }
             draw(ctx, scale) {
-                // Hiệu ứng fade in/out theo vòng đời
                 var opacity = 1 - (this.life / this.maxLife);
-                ctx.fillStyle = `rgba(255, 0, 85, ${opacity})`; // Màu hồng neon rực rỡ
+                ctx.fillStyle = `rgba(255, 0, 85, ${opacity})`; // Màu hồng neon nguyên bản
                 
-                // Tính toán vị trí đập (Beating) kết hợp scale
                 var drawX = (canvas.width / 2) + this.x * scale;
                 var drawY = (canvas.height / 2) + this.y * scale;
 
-                // Thêm glow effect cho điểm sáng
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = "#ff0055";
 
@@ -355,36 +344,29 @@
             }
         }
 
-        // Vòng lặp Render (Animation Loop)
         function render() {
-            // Hiệu ứng Motion Blur (Làm mờ để tạo bóng ma chuyển động)
-            context.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            // BÍ KÍP NỀN ĐEN TUYỀN Ở ĐÂY:
+            // Thay vì dùng độ trong suốt 0.3, dùng 0.45 để lớp đen phủ lên nhanh hơn, làm tối nền hơn.
+            context.fillStyle = 'rgba(0, 0, 0, 0.45)'; 
             context.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Thuật toán đập nhịp tim chân thực
             time += 0.05;
-            // Công thức heartbeat: 1 + 0.15 * (sin^2 + v.v...)
             var scale = 1 + 0.15 * Math.pow(Math.sin(time * 1.5), 6); 
 
-            // Sinh ra hạt mới liên tục
             for (let i = 0; i < particleRate / 10; i++) {
                 particles.push(new Particle());
             }
 
-            // Cập nhật và vẽ các hạt
             for (let i = 0; i < particles.length; i++) {
                 if (particles[i].update()) {
                     particles[i].draw(context, scale);
                 } else {
-                    // Xóa hạt chết để tối ưu bộ nhớ
                     particles.splice(i, 1);
                     i--;
                 }
             }
             requestAnimationFrame(render);
         }
-        
-        // Bắt đầu nhịp đập
         render();
     }
 </script>
