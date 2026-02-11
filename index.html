@@ -26,10 +26,10 @@
     body.switch-scene #scene1 { opacity: 0; pointer-events: none; }
     body.switch-scene #scene2 { opacity: 1; pointer-events: auto; z-index: 10; }
 
-    /* --- ĐẾM NGƯỢC (Đã dời xuống dưới) --- */
+    /* --- ĐẾM NGƯỢC --- */
     #countdown-box {
         position: absolute; 
-        top: 75%; /* Dời xuống thấp hơn tí nữa */
+        top: 75%; 
         left: 50%; transform: translateX(-50%);
         background: rgba(255, 77, 109, 0.9); color: white;
         padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: bold;
@@ -61,28 +61,20 @@
     
     /* 🌸 STICKER TRANG TRÍ MÉP THƯ */
     .sticker {
-        position: absolute;
-        background: #fff;
-        padding: 3px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-        font-size: 20px;
-        z-index: 30;
-        border: 1px solid #fde2e8;
-        display: flex; justify-content: center; align-items: center;
+        position: absolute; background: #fff; padding: 3px; border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 20px; z-index: 30;
+        border: 1px solid #fde2e8; display: flex; justify-content: center; align-items: center;
     }
     .sticker-tl { top: -12px; left: -12px; transform: rotate(-20deg); }
     .sticker-br { bottom: -12px; right: -12px; transform: rotate(15deg); }
 
-    /* CẬP NHẬT CSS CHO ẢNH BAY */
+    /* ẢNH BAY */
     .photo-card { 
         position: absolute; width: 90px; background: white; padding: 4px; padding-bottom: 18px; 
         box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; 
-        /* Tăng thời gian transition lên để bay mượt hơn */
-        transition: all 2s cubic-bezier(0.25, 1, 0.5, 1); 
+        /* Cập nhật transition: Tách riêng opacity và transform để lúc ẩn đi dịch chuyển không bị lộ */
+        transition: opacity 0.8s ease-in-out, transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
         pointer-events: none; border-radius: 3px; 
-        /* Set sẵn vị trí bằng biến CSS */
-        transform: translate(var(--x), var(--y)) rotate(var(--r));
     }
     .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
     
@@ -105,12 +97,7 @@
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
 
     /* --- CSS CỦA SCENE 2 --- */
-    #cute-cat {
-        position: absolute; bottom: -200px;
-        width: 150px; height: auto;
-        transition: bottom 1s ease-out; z-index: 20;
-        filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
-    }
+    #cute-cat { position: absolute; bottom: -200px; width: 150px; height: auto; transition: bottom 1s ease-out; z-index: 20; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
     body.switch-scene #cute-cat { bottom: 10px; }
     .mini-heart { position: absolute; color: var(--pink-main); font-size: 16px; pointer-events: none; z-index: 15; transition: all 2s cubic-bezier(0.25, 1, 0.5, 1); filter: drop-shadow(0 0 5px rgba(255, 77, 109, 0.8)); }
 </style>
@@ -127,7 +114,6 @@
             <div class="letter">
                 <div class="sticker sticker-tl">🌸</div>
                 <div class="sticker sticker-br">🌺</div>
-
                 <h3 id="line1" style="min-height: 28px; margin-bottom: 10px;"></h3>
                 <p id="line2" style="min-height: 25px;"></p>
                 <p id="line3" style="min-height: 25px;"></p>
@@ -148,8 +134,8 @@
 </div>
 
 <script>
-    // 1. DANH SÁCH ẢNH (THAY LINK CỦA ÔNG VÀO ĐÂY NHA)
-const photos = [
+    // 1. DANH SÁCH ẢNH
+ const photos = [
         "./images/anh1.jpg.JPG",
         "./images/anh2.jpg.jpg",
         "./images/anh3.jpg.JPG",
@@ -159,7 +145,6 @@ const photos = [
         "./images/anh7.jpg.PNG",
         "./images/anh8.jpg.JPG"
     ];
-
     // Decor Chung
     for(let i=0; i<60; i++) {
         let s = document.createElement('div'); s.className = 'star';
@@ -173,92 +158,86 @@ const photos = [
         document.body.appendChild(h); setTimeout(() => h.remove(), 6000);
     }, 500);
 
-    // --- HÀM GÕ CHỮ TỪNG DÒNG ---
+    // --- HÀM GÕ CHỮ ---
     function typeLine(elementId, text, speed, callback) {
-        let i = 0;
-        let el = document.getElementById(elementId);
+        let i = 0; let el = document.getElementById(elementId);
         function type() {
-            if (i < text.length) {
-                el.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            } else if (callback) {
-                setTimeout(callback, 200);
-            }
+            if (i < text.length) { el.innerHTML += text.charAt(i); i++; setTimeout(type, speed); } 
+            else if (callback) { setTimeout(callback, 200); }
         }
         type();
     }
 
-    // --- HÀM RANDOM VỊ TRÍ MỚI CHO ẢNH ---
-    function randomizePhotoPosition(img) {
-        // Bán kính ngẫu nhiên từ 250 đến 320 (Xa hơn xíu)
-        const minR = 250;
-        const maxR = 320;
-        const newRadius = minR + Math.random() * (maxR - minR);
-        const newAngle = Math.random() * Math.PI * 2; // Góc ngẫu nhiên
-
-        const x = Math.cos(newAngle) * newRadius;
-        const y = Math.sin(newAngle) * newRadius - 40;
-        const randomRot = (Math.random() - 0.5) * 40;
-
-        // Cập nhật biến CSS để transition tự chạy
-        img.style.setProperty('--x', `calc(-50% + ${x}px)`);
-        img.style.setProperty('--y', `calc(-50% + ${y}px)`);
-        img.style.setProperty('--r', `${randomRot}deg`);
-    }
-
-
-    // --- LOGIC MỞ THƯ ---
+    // --- LOGIC MỞ THƯ & ẢO THUẬT ẢNH ---
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn').style.opacity = '0';
         setTimeout(() => document.getElementById('btn').style.display = 'none', 500);
 
-        // Bung ảnh lần đầu
         const total = photos.length;
-        // TĂNG BÁN KÍNH BAN ĐẦU LÊN 280 ĐỂ XA THƯ HƠN
-        const radius = 280; 
+        
         photos.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`;
-            // Xuất phát từ giữa
             img.style.left = '50%'; img.style.top = '45%';
             img.style.transform = 'translate(-50%, -50%) scale(0)';
-            
             document.getElementById('scene1').appendChild(img);
             
-            let angle = (i / total) * Math.PI * 2;
-            let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40;
-            let randomRot = (Math.random() - 0.5) * 30;
+            // TỌA ĐỘ A (Vòng tròn chuẩn ban đầu)
+            let angleA = (i / total) * Math.PI * 2;
+            let radiusA = 280; 
+            let xA = Math.cos(angleA) * radiusA; 
+            let yA = Math.sin(angleA) * radiusA - 40;
+            let rotA = (Math.random() - 0.5) * 30;
 
-            // Set vị trí đích
-            img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${randomRot}deg`);
-            
+            // TỌA ĐỘ B (Vòng tròn xen kẽ, bán kính lộn xộn để tạo sự khác biệt)
+            let angleB = angleA + (Math.PI / total); // Lệch đi nửa góc
+            let radiusB = 240 + (i % 2 === 0 ? 30 : -20); // Đứa xa đứa gần
+            let xB = Math.cos(angleB) * radiusB; 
+            let yB = Math.sin(angleB) * radiusB - 40;
+            let rotB = (Math.random() - 0.5) * 50;
+
+            // --- TRÌNH TỰ ANIMATION KỲ DIỆU ---
             setTimeout(() => {
-                // Bay ra
+                // BƯỚC 1: Bung ra tọa độ A
                 img.style.opacity = '1';
-                img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`;
+                img.style.transform = `translate(calc(-50% + ${xA}px), calc(-50% + ${yA}px)) rotate(${rotA}deg)`;
                 
-                // Sau khi bay ra xong, bắt đầu đung đưa nhẹ
-                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 2000);
-
-                // --- KÍCH HOẠT RANDOM DI CHUYỂN ---
-                // Đợi khoảng 4 giây sau khi mở, bắt đầu cho di chuyển ngẫu nhiên
+                // BƯỚC 2: Chờ 2.5 giây, sau đó ẩn đi
                 setTimeout(() => {
-                    // Tắt animation đung đưa cũ đi để không bị xung đột
-                    img.style.animation = 'none';
-                    // Di chuyển lần đầu
-                    randomizePhotoPosition(img);
-                    // Cài đặt lặp lại cứ 4-7 giây di chuyển 1 lần
-                    setInterval(() => {
-                        randomizePhotoPosition(img);
-                    }, 4000 + Math.random() * 3000);
-                }, 4000);
+                    img.style.opacity = '0';
+                    
+                    // BƯỚC 3: Trong lúc đang tàng hình, di chuyển sang tọa độ B, rồi hiện lên
+                    setTimeout(() => {
+                        img.style.transform = `translate(calc(-50% + ${xB}px), calc(-50% + ${yB}px)) rotate(${rotB}deg)`;
+                        img.style.opacity = '1';
+                        
+                        // BƯỚC 4: Đứng ngắm ở tọa độ B khoảng 3 giây, sau đó lại ẩn đi
+                        setTimeout(() => {
+                            img.style.opacity = '0';
+                            
+                            // BƯỚC 5: Di chuyển ngược về tọa độ A, hiện lên và bắt đầu đung đưa vĩnh viễn
+                            setTimeout(() => {
+                                img.style.transform = `translate(calc(-50% + ${xA}px), calc(-50% + ${yA}px)) rotate(${rotA}deg)`;
+                                img.style.opacity = '1';
+                                
+                                // Gắn hiệu ứng đung đưa sau khi đã an vị ở chỗ cũ
+                                setTimeout(() => {
+                                    img.style.setProperty('--x', `calc(-50% + ${xA}px)`); 
+                                    img.style.setProperty('--y', `calc(-50% + ${yA}px)`); 
+                                    img.style.setProperty('--r', `${rotA}deg`);
+                                    img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
+                                }, 1200);
+
+                            }, 800); // Tốc độ ẩn -> hiện về A
+                        }, 3000); // Thời gian đứng ngắm ở B
+                    }, 800); // Tốc độ ẩn -> hiện sang B
+                }, 2500); // Thời gian đứng ngắm ở A lần đầu
 
             }, i * 150);
         });
 
-        // Gõ chữ
+        // Gõ chữ (Trùng khớp thời gian với lúc ảnh đang biến hóa)
         setTimeout(() => {
             typeLine('line1', "Happy Valentine's 💖", 50, () => {
                 typeLine('line2', "Em là điều tuyệt vời nhất!", 50, () => {
