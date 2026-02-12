@@ -11,7 +11,7 @@
         --pink-glow: #ff0055;
         --green-dark: #1b4332;
         --green-medium: #2d6a4f;
-        --paper-color: #fffdf0; /* Màu giấy thư sang hơn */
+        --paper-color: #fffdf0;
     }
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Quicksand', sans-serif}
     
@@ -36,7 +36,7 @@
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
     @keyframes floatUp { 0% { transform: translateY(110vh) scale(0.5); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
     
-    /* --- PHONG BÌ & LÁ THƯ ĐẸP HƠN --- */
+    /* --- PHONG BÌ & LÁ THƯ --- */
     .envelope-wrapper { position: relative; width: 320px; height: 220px; z-index: 100; perspective: 1000px; margin-top: 60px; }
     .envelope { position: relative; width: 100%; height: 100%; background: #ffffff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
     .envelope::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 30; background: #fff; clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
@@ -49,38 +49,28 @@
     }
     .envelope.open .lid { transform: rotateX(180deg); z-index: 5; }
     
-    /* LÁ THƯ LUXURY */
+    /* LÁ THƯ */
     .letter { 
         position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
-        width: 92%; 
-        padding: 20px; 
-        background: var(--paper-color); /* Giấy màu kem */
-        border-radius: 8px; 
-        color: #c9184a; 
+        width: 92%; padding: 20px; 
+        background: var(--paper-color); border-radius: 8px; color: #c9184a; 
         transition: transform 0.8s 0.3s, z-index 0s 0.3s; z-index: 20; 
-        /* Dòng kẻ mờ tinh tế hơn */
         background-image: repeating-linear-gradient(var(--paper-color), var(--paper-color) 24px, #ffeef2 25px); 
-        line-height: 26px; 
-        /* Bóng đổ sâu hơn tạo cảm giác 3D */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
-        font-size: 14px; 
-        display: flex; flex-direction: column; gap: 6px;
+        line-height: 26px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
+        font-size: 14px; display: flex; flex-direction: column; gap: 6px;
     }
     .envelope.open .letter { transform: translate(-50%, -220px); z-index: 999; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
     
-    /* STICKER (Ban đầu ẩn) */
+    /* STICKER */
     .sticker { 
         position: absolute; background: #fff; padding: 4px; border-radius: 50%; 
         box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-size: 22px; z-index: 30; 
-        border: 2px solid #fff0f3; 
-        display: flex; justify-content: center; align-items: center;
-        opacity: 0; transform: scale(0); /* Ẩn đi */
-        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Hiệu ứng Pop-up */
+        border: 2px solid #fff0f3; display: flex; justify-content: center; align-items: center;
+        opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .sticker-tl { top: -15px; left: -15px; } 
-    .sticker-br { bottom: -15px; right: -15px; }
+    .sticker-tl { top: -15px; left: -15px; } .sticker-br { bottom: -15px; right: -15px; }
 
-    /* ẢNH BAY (Đẩy xa hơn) */
+    /* ẢNH BAY */
     .photo-card { 
         position: absolute; width: 95px; background: white; padding: 5px; padding-bottom: 20px; 
         box-shadow: 0 8px 20px rgba(0,0,0,0.4); transform-origin: center; opacity: 0; z-index: 50; 
@@ -89,29 +79,41 @@
     }
     .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #f0f0f0; border-radius: 2px;}
 
-    /* --- VƯỜN HOA TULIP 2.0 (ĐẸP HƠN) --- */
-    .garden { position: absolute; bottom: 0; width: 100%; height: 140px; display: flex; justify-content: center; align-items: flex-end; gap: 50px; pointer-events: none;}
+    /* --- VƯỜN HOA TULIP (ĐÃ SỬA LÁ DÀI NHỌN & Z-INDEX) --- */
+    .garden { 
+        position: absolute; bottom: 0; width: 100%; height: 140px; 
+        display: flex; justify-content: center; align-items: flex-end; gap: 50px; 
+        pointer-events: none;
+        z-index: 60; /* 🔥 QUAN TRỌNG: Đặt z-index cao hơn ảnh (50) để không bị che */
+    }
     .tulip { position: relative; display: flex; flex-direction: column; align-items: center; transform-origin: bottom; animation: gentleSway 3s infinite ease-in-out alternate; }
     
-    /* Thân hoa cong nhẹ tự nhiên */
-    .stem { 
-        width: 6px; height: 70px; 
-        background: linear-gradient(to right, #2d6a4f, #40916c); 
-        border-radius: 10px; z-index: 1;
-    }
+    .stem { width: 6px; height: 70px; background: linear-gradient(to right, #2d6a4f, #40916c); border-radius: 10px; z-index: 1; }
     
-    /* Đầu hoa vẽ tỉ mỉ hơn */
     .flower { position: relative; width: 44px; height: 50px; z-index: 2; margin-bottom: -5px; }
     .petal { position: absolute; background: linear-gradient(to top, var(--pink-main), #ff8fa3); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; box-shadow: inset 2px -5px 10px rgba(0,0,0,0.1); }
-    
     .petal.main { width: 34px; height: 50px; left: 5px; z-index: 3; }
     .petal.left { width: 28px; height: 42px; left: -2px; top: 5px; transform: rotate(-20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
     .petal.right { width: 28px; height: 42px; right: -2px; top: 5px; transform: rotate(20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
 
-    /* Lá uốn lượn */
-    .leaf { position: absolute; width: 30px; height: 80px; background: linear-gradient(to top, #1b4332, #52b788); border-radius: 0 50% 0 50%; bottom: 5px; z-index: 0; }
-    .leaf.left { left: -20px; transform: rotate(-15deg) scaleX(-1); border-radius: 50% 0 50% 0; }
-    .leaf.right { right: -20px; transform: rotate(15deg); }
+    /* 🔥 LÁ TULIP MỚI: Dài, nhọn, uốn cong */
+    .leaf { 
+        position: absolute; 
+        width: 90px; /* Lá dài */
+        height: 22px; /* Lá hẹp */
+        background: linear-gradient(to right, var(--green-dark), #52b788);
+        border-radius: 0 100% 0 100%; /* Tạo hình nhọn 2 đầu */
+        bottom: 15px; 
+        z-index: 0;
+        transform-origin: bottom left; /* Điểm xoay ở gốc */
+    }
+    .leaf.left {
+        left: 2px; transform: rotate(-80deg); /* Dựng đứng và nghiêng trái */
+    }
+    .leaf.right {
+        right: 2px; transform: scaleX(-1) rotate(-80deg); /* Lật ngược và nghiêng phải */
+        transform-origin: bottom right;
+    }
 
     @keyframes gentleSway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
@@ -156,7 +158,6 @@
                     <div class="letter">
                         <div class="sticker sticker-tl">🌸</div>
                         <div class="sticker sticker-br">🌺</div>
-                        
                         <div id="line1" style="font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
                         <div id="line2" style="text-align: left; text-indent: 10px;"></div>
                         <div id="line3" style="text-align: left; text-indent: 10px;"></div>
@@ -236,7 +237,6 @@
         document.getElementById('btn-open').style.opacity = '0';
         setTimeout(() => document.getElementById('btn-open').style.display = 'none', 500);
 
-        // 🔥 CHỈNH SỬA: Đẩy ảnh ra xa bằng bán kính 360
         let group1Els = []; let group2Els = []; const radius = 360; 
 
         photos1.forEach((url, i) => {
@@ -251,10 +251,7 @@
         photos2.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; document.getElementById('scene1').appendChild(img); group2Els.push(img);
-            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); 
-            // Set 2 cũng đẩy xa ra nhưng nhấp nhô tí (330-360)
-            let radB = 330 + (i % 2 === 0 ? 30 : -20); 
-            let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40; let rot = (Math.random() - 0.5) * 40;
+            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); let radB = 330 + (i % 2 === 0 ? 30 : -20); let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40; let rot = (Math.random() - 0.5) * 40;
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
             img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
         });
@@ -270,13 +267,11 @@
             }, 3500);
         }, 3000);
 
-        // --- GÕ NỘI DUNG LÁ THƯ & HIỆN STICKER ---
         setTimeout(() => {
-            // 🔥 HIỆN STICKER: Sau 1s thư bay lên thì sticker BÙM ra
             setTimeout(() => {
                 document.querySelectorAll('.sticker').forEach(s => {
                     s.style.opacity = '1';
-                    s.style.transform = 'scale(1) rotate(var(--r, 0deg))'; // Giữ nguyên góc xoay CSS
+                    s.style.transform = 'scale(1) rotate(var(--r, 0deg))';
                 });
             }, 1000);
 
@@ -294,33 +289,17 @@
         }, 1200);
     }
 
-        const storyline = [
-
-        ["Gửi em Nu,"],
-
-        ["Mong sao","em luôn bình an"],
-
-        ["Mong sao","em luôn hạnh phúc"],
-
-        ["Anh Zinh sẽ luôn bên cạnh em"],
-
-        ["Sẽ luôn", "yêu thương"],
-
-        ["Sẽ luôn", "chia sẻ"],
-
-        ["Sẽ luôn","quan tâm em"],
-
-        ["Anh chỉ mong muốn"],
-
-        ["Em cảm thấy","thiệt là hạnh phúc","khi ở bên anh"],
-
-        ["Anh yêu em nhiều lắm"],
-
-        ["Happy Valentine,", "my girl!"],
-
+    const storyline = [
+        ["Gửi bé Nu của anh"],
+        ["Ngày hôm nay", "của em thế nào?"],
+        ["Dù mưa hay nắng", "dù vui hay buồn"],
+        ["Thì hãy nhớ kỹ", "điều này nhé:"],
+        ["Luôn có anh Zinh", "đứng sau lưng em"],
+        ["Sẵn sàng che chở", "và yêu chiều em"],
+        ["Vì em xứng đáng", "với những gì tốt nhất"],
+        ["Mãi hạnh phúc", "bên anh nha!"],
+        ["Happy Valentine,", "My Everything 💖"]
     ];
-
-
 
     async function goToScene2() {
         document.body.classList.add('in-scene2');
