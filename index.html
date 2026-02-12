@@ -49,7 +49,6 @@
     }
     .envelope.open .lid { transform: rotateX(180deg); z-index: 5; }
     
-    /* LÁ THƯ */
     .letter { 
         position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
         width: 92%; padding: 20px; 
@@ -61,7 +60,6 @@
     }
     .envelope.open .letter { transform: translate(-50%, -220px); z-index: 999; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
     
-    /* STICKER */
     .sticker { 
         position: absolute; background: #fff; padding: 4px; border-radius: 50%; 
         box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-size: 22px; z-index: 30; 
@@ -79,40 +77,46 @@
     }
     .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #f0f0f0; border-radius: 2px;}
 
-    /* --- VƯỜN HOA TULIP (ĐÃ SỬA LÁ DÀI NHỌN & Z-INDEX) --- */
+    /* --- VƯỜN HOA TULIP (ĐÃ FIX LỖI LÁ) --- */
     .garden { 
-        position: absolute; bottom: 0; width: 100%; height: 140px; 
+        position: absolute; bottom: 0; width: 100%; height: 160px; /* Tăng chiều cao xíu cho thoáng */
         display: flex; justify-content: center; align-items: flex-end; gap: 50px; 
-        pointer-events: none;
-        z-index: 60; /* 🔥 QUAN TRỌNG: Đặt z-index cao hơn ảnh (50) để không bị che */
+        pointer-events: none; z-index: 60; 
     }
     .tulip { position: relative; display: flex; flex-direction: column; align-items: center; transform-origin: bottom; animation: gentleSway 3s infinite ease-in-out alternate; }
     
-    .stem { width: 6px; height: 70px; background: linear-gradient(to right, #2d6a4f, #40916c); border-radius: 10px; z-index: 1; }
+    .stem { width: 6px; height: 80px; background: linear-gradient(to right, #2d6a4f, #40916c); border-radius: 10px; z-index: 2; }
     
-    .flower { position: relative; width: 44px; height: 50px; z-index: 2; margin-bottom: -5px; }
+    .flower { position: relative; width: 44px; height: 50px; z-index: 3; margin-bottom: -5px; }
     .petal { position: absolute; background: linear-gradient(to top, var(--pink-main), #ff8fa3); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; box-shadow: inset 2px -5px 10px rgba(0,0,0,0.1); }
     .petal.main { width: 34px; height: 50px; left: 5px; z-index: 3; }
     .petal.left { width: 28px; height: 42px; left: -2px; top: 5px; transform: rotate(-20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
     .petal.right { width: 28px; height: 42px; right: -2px; top: 5px; transform: rotate(20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
 
-    /* 🔥 LÁ TULIP MỚI: Dài, nhọn, uốn cong */
+    /* 🔥 LÁ FIX MỚI: Gắn chặt vào thân, không dùng lật ngược */
     .leaf { 
         position: absolute; 
-        width: 90px; /* Lá dài */
-        height: 22px; /* Lá hẹp */
-        background: linear-gradient(to right, var(--green-dark), #52b788);
-        border-radius: 0 100% 0 100%; /* Tạo hình nhọn 2 đầu */
-        bottom: 15px; 
-        z-index: 0;
-        transform-origin: bottom left; /* Điểm xoay ở gốc */
+        width: 25px; /* Bề ngang hẹp */
+        height: 90px; /* Dài */
+        background: linear-gradient(to top, var(--green-dark), #52b788);
+        bottom: 5px; 
+        z-index: 1; /* Nằm sau thân */
     }
+    
+    /* Lá trái: Cong sang trái */
     .leaf.left {
-        left: 2px; transform: rotate(-80deg); /* Dựng đứng và nghiêng trái */
+        left: 50%; margin-left: -20px; /* Căn vị trí */
+        border-radius: 100% 0 50% 0; /* Bo góc tạo hình lá nhọn */
+        transform-origin: bottom right; /* Gốc xoay ở chân lá bên phải (gắn vào thân) */
+        transform: rotate(-10deg);
     }
+    
+    /* Lá phải: Cong sang phải */
     .leaf.right {
-        right: 2px; transform: scaleX(-1) rotate(-80deg); /* Lật ngược và nghiêng phải */
-        transform-origin: bottom right;
+        left: 50%; margin-left: -5px; /* Căn vị trí */
+        border-radius: 0 100% 0 50%; /* Bo góc ngược lại */
+        transform-origin: bottom left; /* Gốc xoay ở chân lá bên trái (gắn vào thân) */
+        transform: rotate(10deg);
     }
 
     @keyframes gentleSway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
