@@ -93,14 +93,25 @@
     .petal.left { width: 28px; height: 42px; left: -2px; top: 5px; transform: rotate(-20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
     .petal.right { width: 28px; height: 42px; right: -2px; top: 5px; transform: rotate(20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
 
+    /* LÁ TULIP BẦU BĨNH & NGHIÊNG */
     .leaf { 
         position: absolute; 
-        width: 25px; height: 90px; 
+        width: 36px; height: 85px; 
         background: linear-gradient(to top, var(--green-dark), #52b788);
         bottom: 5px; z-index: 1; 
     }
-    .leaf.left { left: 50%; margin-left: -20px; border-radius: 100% 0 50% 0; transform-origin: bottom right; transform: rotate(-22deg); }
-    .leaf.right { left: 50%; margin-left: -5px; border-radius: 0 100% 0 50%; transform-origin: bottom left; transform: rotate(22deg); }
+    .leaf.left {
+        left: 50%; margin-left: -28px; 
+        border-radius: 100% 0 50% 0; 
+        transform-origin: bottom right; 
+        transform: rotate(-22deg);
+    }
+    .leaf.right {
+        left: 50%; margin-left: -8px; 
+        border-radius: 0 100% 0 50%; 
+        transform-origin: bottom left; 
+        transform: rotate(22deg);
+    }
 
     @keyframes gentleSway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
@@ -170,7 +181,7 @@
         </div>
     </div>
 
-    <div class="screen" id="scene2">
+    <div class="screen" id="screen2">
         <div id="scene3">
             <canvas id="pinkboard"></canvas>
         </div>
@@ -180,10 +191,11 @@
 <button id="btn-down-arrow" class="arrow-btn" onclick="scrollDownToScene3()">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15.6315L20.9679 6.66357L22.3822 8.07779L12 18.4599L1.61783 8.07779L3.03212 6.66357L12 15.6315Z"></path></svg>
 </button>
+
 <script>
     // 1. DANH SÁCH ẢNH (Thay link của ông vào)
     // Tui sẽ dùng 4 ảnh đầu của mỗi danh sách để chia 4 trái - 4 phải nha
-     const photos1 = [
+    const photos1 = [
 
         "./images/anh1.jpg.JPG",
 
@@ -211,7 +223,7 @@
     // x: Khoảng cách ngang (âm là trái, dương là phải). Thư rộng ~320, nên x > 180 là an toàn.
     // y: Độ cao (âm là trên, dương là dưới). Hoa cao ~160 từ đáy, nên y < 150 là an toàn.
 
-    // 4 Vị trí bên TRÁI (Xếp dích dắc)
+    // 4 Vị trí bên TRÁI
     const posLeft = [
         { x: -320, y: -150, r: -15 }, // 1. Trên cao, xa
         { x: -220, y: -50,  r: 5 },   // 2. Giữa trên, gần
@@ -219,7 +231,7 @@
         { x: -220, y: 140,  r: 10 }   // 4. Dưới thấp, gần (vẫn cao hơn hoa)
     ];
 
-    // 4 Vị trí bên PHẢI (Đối xứng lại)
+    // 4 Vị trí bên PHẢI
     const posRight = [
         { x: 320, y: -150, r: 15 },  // 1. Trên cao, xa
         { x: 220, y: -50,  r: -5 },  // 2. Giữa trên, gần
@@ -250,15 +262,13 @@
         type();
     }
 
-    // --- LOGIC MỞ THƯ (DÙNG BẢN ĐỒ MỚI) ---
+    // --- LOGIC MỞ THƯ (HIỆN HẾT KHÔNG NHẤP NHÁY) ---
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn-open').style.opacity = '0';
         setTimeout(() => document.getElementById('btn-open').style.display = 'none', 500);
 
-        let group1Els = []; let group2Els = []; 
-
-        // 🔥 NHÓM TRÁI: Lấy 4 ảnh đầu của photos1 đặt vào vị trí bên trái
+        // 🔥 NHÓM TRÁI
         for(let i=0; i<4; i++) {
             let url = photos1[i];
             let p = posLeft[i];
@@ -267,7 +277,7 @@
             img.innerHTML = `<img src="${url}">`; 
             img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
             
-            document.getElementById('scene1').appendChild(img); group1Els.push(img);
+            document.getElementById('scene1').appendChild(img);
             
             img.style.setProperty('--x', `calc(-50% + ${p.x}px)`); 
             img.style.setProperty('--y', `calc(-50% + ${p.y}px)`); 
@@ -280,37 +290,26 @@
             }, i * 150);
         }
 
-        // 🔥 NHÓM PHẢI: Lấy 4 ảnh đầu của photos2 đặt vào vị trí bên phải
+        // 🔥 NHÓM PHẢI
         for(let i=0; i<4; i++) {
             let url = photos2[i];
             let p = posRight[i];
 
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`; 
-            img.style.left = '50%'; img.style.top = '45%'; 
-            document.getElementById('scene1').appendChild(img); group2Els.push(img);
+            img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
+            document.getElementById('scene1').appendChild(img);
             
             img.style.setProperty('--x', `calc(-50% + ${p.x}px)`); 
             img.style.setProperty('--y', `calc(-50% + ${p.y}px)`); 
             img.style.setProperty('--r', `${p.r}deg`);
             
-            // Nhóm này ẩn trước, bay ra đúng vị trí
-            img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; 
-            img.style.opacity = '0';
-            img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
+            setTimeout(() => { 
+                img.style.opacity = '1'; 
+                img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; 
+                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500); 
+            }, i * 150);
         }
-
-        // Hiệu ứng ẩn hiện luân phiên 2 nhóm trái phải
-        setTimeout(() => {
-            let showGroup1 = true;
-            setInterval(() => {
-                if(!document.body.classList.contains('in-scene2')) {
-                    showGroup1 = !showGroup1;
-                    if(showGroup1) { group2Els.forEach(img => img.style.opacity = '0'); setTimeout(() => { group1Els.forEach(img => img.style.opacity = '1'); }, 1000);
-                    } else { group1Els.forEach(img => img.style.opacity = '0'); setTimeout(() => { group2Els.forEach(img => img.style.opacity = '1'); }, 1000); }
-                }
-            }, 3500);
-        }, 3000);
 
         // Gõ thư và hiện Sticker
         setTimeout(() => {
