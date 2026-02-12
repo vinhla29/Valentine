@@ -93,29 +93,14 @@
     .petal.left { width: 28px; height: 42px; left: -2px; top: 5px; transform: rotate(-20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
     .petal.right { width: 28px; height: 42px; right: -2px; top: 5px; transform: rotate(20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
 
-    /* 🔥 LÁ FIX MỚI: Nghiêng xuống nhiều hơn */
     .leaf { 
         position: absolute; 
         width: 25px; height: 90px; 
         background: linear-gradient(to top, var(--green-dark), #52b788);
         bottom: 5px; z-index: 1; 
     }
-    
-    /* Lá trái: Nghiêng 22 độ sang trái */
-    .leaf.left {
-        left: 50%; margin-left: -20px; 
-        border-radius: 100% 0 50% 0; 
-        transform-origin: bottom right; 
-        transform: rotate(-22deg); /* Tăng góc nghiêng */
-    }
-    
-    /* Lá phải: Nghiêng 22 độ sang phải */
-    .leaf.right {
-        left: 50%; margin-left: -5px; 
-        border-radius: 0 100% 0 50%; 
-        transform-origin: bottom left; 
-        transform: rotate(22deg); /* Tăng góc nghiêng */
-    }
+    .leaf.left { left: 50%; margin-left: -20px; border-radius: 100% 0 50% 0; transform-origin: bottom right; transform: rotate(-22deg); }
+    .leaf.right { left: 50%; margin-left: -5px; border-radius: 0 100% 0 50%; transform-origin: bottom left; transform: rotate(22deg); }
 
     @keyframes gentleSway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
@@ -185,7 +170,7 @@
         </div>
     </div>
 
-    <div class="screen" id="screen2">
+    <div class="screen" id="scene2">
         <div id="scene3">
             <canvas id="pinkboard"></canvas>
         </div>
@@ -198,17 +183,28 @@
 
 <script>
     // 1. DANH SÁCH ẢNH (Thay link của ông vào)
-    const photos1 = [
+     const photos1 = [
+
         "./images/anh1.jpg.JPG",
+
         "./images/anh2.jpg.jpg",
+
         "./images/anh3.jpg.JPG",
+
         "./images/anh4.jpg.JPG",
+
     ];
+
     const photos2 = [
+
         "./images/anh5.jpg.JPG",
+
         "./images/anh6.jpg.JPEG",
+
         "./images/anh7.jpg.PNG",
+
         "./images/anh8.jpg.jpg"
+
     ];
 
     const universe = document.getElementById('universe');
@@ -239,21 +235,40 @@
         document.getElementById('btn-open').style.opacity = '0';
         setTimeout(() => document.getElementById('btn-open').style.display = 'none', 500);
 
-        let group1Els = []; let group2Els = []; const radius = 360; 
+        let group1Els = []; let group2Els = []; 
 
+        // 🔥 THUẬT TOÁN CHIA PHE TRÁI/PHẢI CHO NHÓM 1
         photos1.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
             document.getElementById('scene1').appendChild(img); group1Els.push(img);
-            let angle = (i / 8) * Math.PI * 2; let x = Math.cos(angle) * radius; let y = Math.sin(angle) * radius - 40; let rot = (Math.random() - 0.5) * 30;
+            
+            let x, y;
+            const baseX = 330; const randomX = Math.random() * 50;
+            // Dàn đều theo chiều dọc từ trên xuống dưới
+            const baseY = ((i % 4) * 90) - 140; const randomY = (Math.random() - 0.5) * 30;
+
+            if (i < 4) { x = baseX + randomX; y = baseY + randomY; } // 4 tấm bên PHẢI
+            else { x = -baseX - randomX; y = baseY + randomY; } // 4 tấm bên TRÁI
+            
+            let rot = (Math.random() - 0.5) * 30;
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
             setTimeout(() => { img.style.opacity = '1'; img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500); }, i * 150);
         });
 
+        // 🔥 THUẬT TOÁN CHIA PHE TRÁI/PHẢI CHO NHÓM 2 (So le hơn)
         photos2.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; document.getElementById('scene1').appendChild(img); group2Els.push(img);
-            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); let radB = 330 + (i % 2 === 0 ? 30 : -20); let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40; let rot = (Math.random() - 0.5) * 40;
+            
+            let x, y;
+            const baseX = 380; const randomX = Math.random() * 60; // Xa hơn nhóm 1
+            const baseY = ((i % 4) * 100) - 160; const randomY = (Math.random() - 0.5) * 40; // Giãn rộng hơn
+
+            if (i < 4) { x = baseX + randomX; y = baseY + randomY; } // 4 tấm bên PHẢI
+            else { x = -baseX - randomX; y = baseY + randomY; } // 4 tấm bên TRÁI
+
+            let rot = (Math.random() - 0.5) * 40;
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
             img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
         });
