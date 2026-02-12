@@ -152,7 +152,7 @@
 </button>
 
 <script>
-    // 1. DANH SÁCH ẢNH (Thay link của ông vào)
+    // 1. DANH SÁCH ẢNH
     const photos1 = [
         "https://via.placeholder.com/150x150/ffb3c1/fff?text=Anh+1", "https://via.placeholder.com/150x150/ffafcc/fff?text=Anh+2",
         "https://via.placeholder.com/150x150/ffc8dd/fff?text=Anh+3", "https://via.placeholder.com/150x150/cdb4db/fff?text=Anh+4",
@@ -227,10 +227,9 @@
         // --- GÕ NỘI DUNG LÁ THƯ MỚI ---
         setTimeout(() => {
             typeLine('line1', "Gửi em Nu,", 50, () => {
-                typeLine('line2', "Hôm nay chính là Valentine đó nhaaa, thì cũm nhân dịp này anh Zinh có chuẩn bị một món quà \"handmade\" dành cho em đó nhaaa.", 30, () => { // Tốc độ 30ms cho lẹ
+                typeLine('line2', "Hôm nay chính là Valentine đó nhaaa, thì cũm nhân dịp này anh Zinh có chuẩn bị một món quà \"handmade\" dành cho em đó nhaaa.", 30, () => { 
                     typeLine('line3', "Tuy nó nhỏ với hơi nham nhở xí nhưng mà anh đã dành rất nhiều tâm huyết để làm ra nó đó hihi ( Tại anh hong rành code web cho lắm :)) ) mong là em sẽ thích hẹ hẹ.", 30, () => {
                         typeLine('line4', "Dờ thì làm theo chỉ dẫn đi nhe babi!!", 50, () => {
-                            // Hiện nút mũi tên sang phải
                             const nextBtn = document.getElementById('btn-next-right');
                             nextBtn.style.opacity = '1';
                             nextBtn.style.pointerEvents = 'auto';
@@ -241,7 +240,6 @@
         }, 1200);
     }
 
-    // --- KỊCH BẢN CHỮ (Giữ nguyên phần này) ---
     const storyline = [
         ["Gửi em Nu"],
         ["Ngày hôm nay", "của em thế nào?"],
@@ -260,20 +258,23 @@
         document.getElementById('btn-next-right').style.pointerEvents = 'none';
         
         await new Promise(r => setTimeout(r, 1500));
-        for (let lines of storyline) {
-            await shootSinglePhrase(lines);
-        }
 
-        const btnDown = document.getElementById('btn-down-arrow');
-        btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
+        // 🔥 QUAN TRỌNG: CHỜ FONT TẢI XONG MỚI BẮN TIM ĐỂ KHÔNG LỖI CHỮ
+        document.fonts.ready.then(async () => {
+            for (let lines of storyline) {
+                await shootSinglePhrase(lines);
+            }
+            const btnDown = document.getElementById('btn-down-arrow');
+            btnDown.style.opacity = '1'; btnDown.style.pointerEvents = 'auto';
+        });
     }
 
-    // --- THUẬT TOÁN TẠO CHỮ CỰC DÀY ---
+    // --- THUẬT TOÁN TẠO CHỮ FIX LỖI ---
     function getTextPoints(lines) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         
-        ctx.font = '900 120px Quicksand'; 
+        ctx.font = '900 100px Quicksand'; // Font to
         
         let maxW = 0;
         lines.forEach(line => {
@@ -282,14 +283,15 @@
         });
         
         canvas.width = maxW + 100; 
-        canvas.height = lines.length * 150 + 50; 
+        canvas.height = lines.length * 120 + 50; 
         
-        ctx.font = '900 120px Quicksand'; 
+        // Reset font sau khi đổi size canvas
+        ctx.font = '900 100px Quicksand'; 
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        const lineSpacing = 140; 
+        const lineSpacing = 110; 
         let startY = (canvas.height - (lines.length - 1) * lineSpacing) / 2;
 
         lines.forEach((line, index) => {
@@ -299,7 +301,8 @@
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
         
-        const step = 9; 
+        // 🔥 FIX LỖI NÉT ĐỨT: Giảm bước nhảy xuống 6 để quét kỹ hơn
+        const step = 6; 
         for (let y = 0; y < canvas.height; y += step) {
             for (let x = 0; x < canvas.width; x += step) {
                 if (imageData[(y * canvas.width + x) * 4 + 3] > 128) {
@@ -307,7 +310,6 @@
                 }
             }
         }
-        
         return { points, baseWidth: canvas.width };
     }
 
@@ -322,13 +324,15 @@
             
             let availableWidth = window.innerWidth * 0.9; 
             let scaleFactor = availableWidth / baseWidth;
-            if (scaleFactor > 0.8) scaleFactor = 0.8; 
+            // Cho phép scale to hơn (lên 1.0) cho các chữ ngắn như "Gửi em Nu"
+            if (scaleFactor > 1.0) scaleFactor = 1.0; 
 
-            let maxPoints = 600;
+            // 🔥 FIX LỖI MẤT NÉT: Tăng giới hạn tim lên 1000
+            let maxPoints = 1000; 
             let filteredPoints = points;
             if (points.length > maxPoints) {
-                let step = Math.ceil(points.length / maxPoints);
-                filteredPoints = points.filter((_, i) => i % step === 0);
+                let ratio = maxPoints / points.length;
+                filteredPoints = points.filter(() => Math.random() < ratio);
             }
 
             filteredPoints.forEach((pt, i) => {
@@ -366,7 +370,6 @@
         });
     }
 
-    // --- LƯỚT XUỐNG CẢNH 3 ---
     function scrollDownToScene3() {
         document.getElementById('btn-down-arrow').style.opacity = '0';
         document.getElementById('btn-down-arrow').style.pointerEvents = 'none';
@@ -374,7 +377,6 @@
         setTimeout(() => { initLiXunHeart(); }, 1500);
     }
 
-    // --- CANVAS TRÁI TIM "THỦ KHOA LÝ" ---
     function initLiXunHeart() {
         var canvas = document.getElementById('pinkboard');
         var context = canvas.getContext('2d');
@@ -437,5 +439,3 @@
         render();
     }
 </script>
-</body>
-</html>
