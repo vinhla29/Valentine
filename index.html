@@ -11,6 +11,7 @@
         --pink-glow: #ff0055;
         --green-dark: #1b4332;
         --green-medium: #2d6a4f;
+        --paper-color: #fffdf0; /* Màu giấy thư sang hơn */
     }
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Quicksand', sans-serif}
     
@@ -35,42 +36,84 @@
     .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
     @keyframes floatUp { 0% { transform: translateY(110vh) scale(0.5); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
     
-    .envelope-wrapper { position: relative; width: 300px; height: 200px; z-index: 100; perspective: 1000px; margin-top: 50px; }
+    /* --- PHONG BÌ & LÁ THƯ ĐẸP HƠN --- */
+    .envelope-wrapper { position: relative; width: 320px; height: 220px; z-index: 100; perspective: 1000px; margin-top: 60px; }
     .envelope { position: relative; width: 100%; height: 100%; background: #ffffff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
     .envelope::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 30; background: #fff; clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
-    .lid { position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 110px solid #ff9eb5; transform-origin: top; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 40; }
+    
+    .lid { 
+        position: absolute; top: 0; left: 0; width: 0; height: 0; 
+        border-left: 160px solid transparent; border-right: 160px solid transparent; 
+        border-top: 120px solid #ff9eb5; 
+        transform-origin: top; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 40; 
+    }
     .envelope.open .lid { transform: rotateX(180deg); z-index: 5; }
     
-    /* CHỈNH SỬA CSS LÁ THƯ ĐỂ CHỨA NHIỀU CHỮ HƠN */
+    /* LÁ THƯ LUXURY */
     .letter { 
         position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
-        width: 95%; /* Rộng hơn xíu */
-        padding: 15px 15px; 
-        background: #fff; border-radius: 5px; color: #c9184a; 
+        width: 92%; 
+        padding: 20px; 
+        background: var(--paper-color); /* Giấy màu kem */
+        border-radius: 8px; 
+        color: #c9184a; 
         transition: transform 0.8s 0.3s, z-index 0s 0.3s; z-index: 20; 
-        background-image: repeating-linear-gradient(white, white 24px, #fde2e8 25px); 
-        line-height: 25px; box-shadow: 0 0 15px rgba(0,0,0,0.1); 
-        font-size: 14px; /* Chữ vừa phải để đọc */
-        display: flex; flex-direction: column; gap: 5px;
+        /* Dòng kẻ mờ tinh tế hơn */
+        background-image: repeating-linear-gradient(var(--paper-color), var(--paper-color) 24px, #ffeef2 25px); 
+        line-height: 26px; 
+        /* Bóng đổ sâu hơn tạo cảm giác 3D */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
+        font-size: 14px; 
+        display: flex; flex-direction: column; gap: 6px;
     }
-    /* Khi mở thư, đẩy lên vừa đủ để đọc hết */
-    .envelope.open .letter { transform: translate(-50%, -200px); z-index: 999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .envelope.open .letter { transform: translate(-50%, -220px); z-index: 999; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
     
-    .sticker { position: absolute; background: #fff; padding: 3px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 20px; z-index: 30; border: 1px solid #fde2e8; display: flex; justify-content: center; align-items: center; }
-    .sticker-tl { top: -12px; left: -12px; transform: rotate(-20deg); } .sticker-br { bottom: -12px; right: -12px; transform: rotate(15deg); }
-    .photo-card { position: absolute; width: 90px; background: white; padding: 4px; padding-bottom: 18px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform-origin: center; opacity: 0; z-index: 50; transition: opacity 1s ease-in-out, transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); pointer-events: none; border-radius: 3px; }
-    .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #eee; }
-    .garden { position: absolute; bottom: 0; width: 100%; height: 130px; display: flex; justify-content: center; align-items: flex-end; gap: 60px; pointer-events: none;}
-    .tulip { position: relative; animation: sway 4s infinite alternate; transform-origin: bottom; display: flex; flex-direction: column; align-items: center; }
-    @keyframes sway { from {transform: rotate(-2deg)} to {transform: rotate(2deg)} }
-    .stem { width: 6px; height: 60px; background: linear-gradient(to right, var(--green-dark), var(--green-medium)); border-radius: 5px; }
-    .flower { width: 40px; height: 48px; position: relative; z-index: 25; }
-    .petal { position: absolute; background: var(--pink-main); border-radius: 50% 50% 30% 30% / 80% 80% 20% 20%; }
-    .petal.main { width: 32px; height: 48px; left: 4px; z-index: 3; box-shadow: inset 2px -4px 8px rgba(0,0,0,0.15); }
-    .petal.side { width: 30px; height: 44px; top: 3px; background: var(--pink-light); }
-    .petal.left { left: -6px; transform: rotate(-15deg); z-index: 2; } .petal.right { right: -6px; transform: rotate(15deg); z-index: 2; }
-    .leaf { position: absolute; background: linear-gradient(to top, var(--green-dark), #40916c); clip-path: ellipse(15% 50% at 50% 50%); width: 25px; height: 85px; bottom: 5px; transform-origin: bottom center; }
-    .leaf.left { left: -20px; transform: rotate(-35deg) scaleX(-1); } .leaf.right { right: -20px; transform: rotate(35deg); }
+    /* STICKER (Ban đầu ẩn) */
+    .sticker { 
+        position: absolute; background: #fff; padding: 4px; border-radius: 50%; 
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-size: 22px; z-index: 30; 
+        border: 2px solid #fff0f3; 
+        display: flex; justify-content: center; align-items: center;
+        opacity: 0; transform: scale(0); /* Ẩn đi */
+        transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Hiệu ứng Pop-up */
+    }
+    .sticker-tl { top: -15px; left: -15px; } 
+    .sticker-br { bottom: -15px; right: -15px; }
+
+    /* ẢNH BAY (Đẩy xa hơn) */
+    .photo-card { 
+        position: absolute; width: 95px; background: white; padding: 5px; padding-bottom: 20px; 
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4); transform-origin: center; opacity: 0; z-index: 50; 
+        transition: opacity 1s ease-in-out, transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
+        pointer-events: none; border-radius: 4px; 
+    }
+    .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #f0f0f0; border-radius: 2px;}
+
+    /* --- VƯỜN HOA TULIP 2.0 (ĐẸP HƠN) --- */
+    .garden { position: absolute; bottom: 0; width: 100%; height: 140px; display: flex; justify-content: center; align-items: flex-end; gap: 50px; pointer-events: none;}
+    .tulip { position: relative; display: flex; flex-direction: column; align-items: center; transform-origin: bottom; animation: gentleSway 3s infinite ease-in-out alternate; }
+    
+    /* Thân hoa cong nhẹ tự nhiên */
+    .stem { 
+        width: 6px; height: 70px; 
+        background: linear-gradient(to right, #2d6a4f, #40916c); 
+        border-radius: 10px; z-index: 1;
+    }
+    
+    /* Đầu hoa vẽ tỉ mỉ hơn */
+    .flower { position: relative; width: 44px; height: 50px; z-index: 2; margin-bottom: -5px; }
+    .petal { position: absolute; background: linear-gradient(to top, var(--pink-main), #ff8fa3); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; box-shadow: inset 2px -5px 10px rgba(0,0,0,0.1); }
+    
+    .petal.main { width: 34px; height: 50px; left: 5px; z-index: 3; }
+    .petal.left { width: 28px; height: 42px; left: -2px; top: 5px; transform: rotate(-20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
+    .petal.right { width: 28px; height: 42px; right: -2px; top: 5px; transform: rotate(20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
+
+    /* Lá uốn lượn */
+    .leaf { position: absolute; width: 30px; height: 80px; background: linear-gradient(to top, #1b4332, #52b788); border-radius: 0 50% 0 50%; bottom: 5px; z-index: 0; }
+    .leaf.left { left: -20px; transform: rotate(-15deg) scaleX(-1); border-radius: 50% 0 50% 0; }
+    .leaf.right { right: -20px; transform: rotate(15deg); }
+
+    @keyframes gentleSway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
     @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
 
     /* MÈO BẮN CHỮ */
@@ -80,8 +123,7 @@
     .mini-heart { 
         position: absolute; color: var(--pink-main); font-size: 13px; pointer-events: none; z-index: 15; 
         transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.5s ease; 
-        filter: drop-shadow(0 0 4px rgba(255, 77, 109, 0.8)); 
-        opacity: 1;
+        filter: drop-shadow(0 0 4px rgba(255, 77, 109, 0.8)); opacity: 1;
     }
 
     /* BUTTONS */
@@ -129,9 +171,9 @@
             </button>
 
             <div class="garden">
-                <div class="tulip"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-                <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem" style="height: 70px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-                <div class="tulip" style="animation-delay: -2s"><div class="flower"><div class="petal side left"></div><div class="petal side right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+                <div class="tulip"><div class="flower"><div class="petal left"></div><div class="petal right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+                <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal left"></div><div class="petal right"></div><div class="petal main"></div></div><div class="stem" style="height: 80px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
+                <div class="tulip" style="animation-delay: -2s"><div class="flower"><div class="petal left"></div><div class="petal right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
             </div>
         </div>
 
@@ -152,7 +194,7 @@
 </button>
 
 <script>
-    // 1. DANH SÁCH ẢNH
+    // 1. DANH SÁCH ẢNH (Thay link của ông vào)
     const photos1 = [
         "https://via.placeholder.com/150x150/ffb3c1/fff?text=Anh+1", "https://via.placeholder.com/150x150/ffafcc/fff?text=Anh+2",
         "https://via.placeholder.com/150x150/ffc8dd/fff?text=Anh+3", "https://via.placeholder.com/150x150/cdb4db/fff?text=Anh+4",
@@ -194,7 +236,8 @@
         document.getElementById('btn-open').style.opacity = '0';
         setTimeout(() => document.getElementById('btn-open').style.display = 'none', 500);
 
-        let group1Els = []; let group2Els = []; const radius = 280; 
+        // 🔥 CHỈNH SỬA: Đẩy ảnh ra xa bằng bán kính 360
+        let group1Els = []; let group2Els = []; const radius = 360; 
 
         photos1.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
@@ -208,7 +251,10 @@
         photos2.forEach((url, i) => {
             let img = document.createElement('div'); img.className = 'photo-card';
             img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; document.getElementById('scene1').appendChild(img); group2Els.push(img);
-            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); let radB = 250 + (i % 2 === 0 ? 30 : -20); let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40; let rot = (Math.random() - 0.5) * 40;
+            let angle = (i / 8) * Math.PI * 2 + (Math.PI / 8); 
+            // Set 2 cũng đẩy xa ra nhưng nhấp nhô tí (330-360)
+            let radB = 330 + (i % 2 === 0 ? 30 : -20); 
+            let x = Math.cos(angle) * radB; let y = Math.sin(angle) * radB - 40; let rot = (Math.random() - 0.5) * 40;
             img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
             img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
         });
@@ -224,8 +270,16 @@
             }, 3500);
         }, 3000);
 
-        // --- GÕ NỘI DUNG LÁ THƯ MỚI ---
+        // --- GÕ NỘI DUNG LÁ THƯ & HIỆN STICKER ---
         setTimeout(() => {
+            // 🔥 HIỆN STICKER: Sau 1s thư bay lên thì sticker BÙM ra
+            setTimeout(() => {
+                document.querySelectorAll('.sticker').forEach(s => {
+                    s.style.opacity = '1';
+                    s.style.transform = 'scale(1) rotate(var(--r, 0deg))'; // Giữ nguyên góc xoay CSS
+                });
+            }, 1000);
+
             typeLine('line1', "Gửi em Nu,", 50, () => {
                 typeLine('line2', "Hôm nay chính là Valentine đó nhaaa, thì cũm nhân dịp này anh Zinh có chuẩn bị một món quà \"handmade\" dành cho em đó nhaaa.", 30, () => { 
                     typeLine('line3', "Tuy nó nhỏ với hơi nham nhở xí nhưng mà anh đã dành rất nhiều tâm huyết để làm ra nó đó hihi ( Tại anh hong rành code web cho lắm :)) ) mong là em sẽ thích hẹ hẹ.", 30, () => {
@@ -240,19 +294,33 @@
         }, 1200);
     }
 
-    const storyline = [
+        const storyline = [
+
         ["Gửi em Nu,"],
+
         ["Mong sao","em luôn bình an"],
+
         ["Mong sao","em luôn hạnh phúc"],
+
         ["Anh Zinh sẽ luôn bên cạnh em"],
+
         ["Sẽ luôn", "yêu thương"],
+
         ["Sẽ luôn", "chia sẻ"],
+
         ["Sẽ luôn","quan tâm em"],
+
         ["Anh chỉ mong muốn"],
+
         ["Em cảm thấy","thiệt là hạnh phúc","khi ở bên anh"],
+
         ["Anh yêu em nhiều lắm"],
+
         ["Happy Valentine,", "my girl!"],
+
     ];
+
+
 
     async function goToScene2() {
         document.body.classList.add('in-scene2');
@@ -260,8 +328,6 @@
         document.getElementById('btn-next-right').style.pointerEvents = 'none';
         
         await new Promise(r => setTimeout(r, 1500));
-
-        // 🔥 QUAN TRỌNG: CHỜ FONT TẢI XONG MỚI BẮN TIM ĐỂ KHÔNG LỖI CHỮ
         document.fonts.ready.then(async () => {
             for (let lines of storyline) {
                 await shootSinglePhrase(lines);
@@ -271,12 +337,11 @@
         });
     }
 
-    // --- THUẬT TOÁN TẠO CHỮ FIX LỖI ---
     function getTextPoints(lines) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d', { willReadFrequently: true });
         
-        ctx.font = '900 100px Quicksand'; // Font to
+        ctx.font = '900 100px Quicksand'; 
         
         let maxW = 0;
         lines.forEach(line => {
@@ -287,7 +352,6 @@
         canvas.width = maxW + 100; 
         canvas.height = lines.length * 120 + 50; 
         
-        // Reset font sau khi đổi size canvas
         ctx.font = '900 100px Quicksand'; 
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
@@ -303,7 +367,6 @@
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
         const points = [];
         
-        // 🔥 FIX LỖI NÉT ĐỨT: Giảm bước nhảy xuống 6 để quét kỹ hơn
         const step = 6; 
         for (let y = 0; y < canvas.height; y += step) {
             for (let x = 0; x < canvas.width; x += step) {
@@ -326,10 +389,8 @@
             
             let availableWidth = window.innerWidth * 0.9; 
             let scaleFactor = availableWidth / baseWidth;
-            // Cho phép scale to hơn (lên 1.0) cho các chữ ngắn như "Gửi em Nu"
             if (scaleFactor > 1.0) scaleFactor = 1.0; 
 
-            // 🔥 FIX LỖI MẤT NÉT: Tăng giới hạn tim lên 1000
             let maxPoints = 1000; 
             let filteredPoints = points;
             if (points.length > maxPoints) {
@@ -441,3 +502,5 @@
         render();
     }
 </script>
+</body>
+</html>
