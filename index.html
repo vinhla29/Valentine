@@ -1,188 +1,6 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine's Movie 💖</title>
-<style>
-    :root {
-        --pink-main: #ff4d6d;
-        --pink-light: #ff758f;
-        --pink-glow: #ff0055;
-        --green-dark: #1b4332;
-        --green-medium: #2d6a4f;
-        --paper-color: #fffdf0;
-    }
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Quicksand', sans-serif}
-    
-    body { margin: 0; overflow: hidden; background: #000; }
-    
-    #universe { 
-        width: 100vw; height: 200vh; 
-        background: linear-gradient(to bottom, #1b1b3a 0%, #000000 60%, #000000 100%);
-        transition: transform 2.5s cubic-bezier(0.65, 0, 0.35, 1);
-    }
-    
-    .screen { width: 100vw; height: 100vh; position: relative; overflow: hidden; }
-
-    .scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; transition: opacity 1.5s ease; }
-    #scene1 { z-index: 2; opacity: 1; }
-    #scene2 { z-index: 1; opacity: 0; pointer-events: none; }
-    body.in-scene2 #scene1 { opacity: 0; pointer-events: none; }
-    body.in-scene2 #scene2 { opacity: 1; pointer-events: auto; z-index: 10; }
-
-    .star { position:absolute; background:white; border-radius:50%; opacity:.5; animation: blink 3s infinite; }
-    @keyframes blink { 0%, 100% {opacity: 0.3} 50% {opacity: 0.8} }
-    .bg-heart { position: absolute; color: var(--pink-main); animation: floatUp 6s linear forwards; z-index: 1; opacity: 0.6; pointer-events: none;}
-    @keyframes floatUp { 0% { transform: translateY(110vh) scale(0.5); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.2); opacity: 0; } }
-    
-    /* --- PHONG BÌ & LÁ THƯ --- */
-    .envelope-wrapper { position: relative; width: 320px; height: 220px; z-index: 100; perspective: 1000px; margin-top: 60px; }
-    .envelope { position: relative; width: 100%; height: 100%; background: #ffffff; border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; }
-    .envelope::after { content: ""; position: absolute; bottom: 0; width: 100%; height: 100%; z-index: 30; background: #fff; clip-path: polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%); border-radius: 0 0 10px 10px; }
-    
-    .lid { 
-        position: absolute; top: 0; left: 0; width: 0; height: 0; 
-        border-left: 160px solid transparent; border-right: 160px solid transparent; 
-        border-top: 120px solid #ff9eb5; 
-        transform-origin: top; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); z-index: 40; 
-    }
-    .envelope.open .lid { transform: rotateX(180deg); z-index: 5; }
-    
-    .letter { 
-        position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); 
-        width: 92%; padding: 20px; 
-        background: var(--paper-color); border-radius: 8px; color: #c9184a; 
-        transition: transform 0.8s 0.3s, z-index 0s 0.3s; z-index: 20; 
-        background-image: repeating-linear-gradient(var(--paper-color), var(--paper-color) 24px, #ffeef2 25px); 
-        line-height: 26px; box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
-        font-size: 14px; display: flex; flex-direction: column; gap: 6px;
-    }
-    .envelope.open .letter { transform: translate(-50%, -220px); z-index: 999; box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-    
-    .sticker { 
-        position: absolute; background: #fff; padding: 4px; border-radius: 50%; 
-        box-shadow: 0 3px 8px rgba(0,0,0,0.2); font-size: 22px; z-index: 30; 
-        border: 2px solid #fff0f3; display: flex; justify-content: center; align-items: center;
-        opacity: 0; transform: scale(0); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .sticker-tl { top: -15px; left: -15px; } .sticker-br { bottom: -15px; right: -15px; }
-
-    /* ẢNH BAY */
-    .photo-card { 
-        position: absolute; width: 95px; background: white; padding: 5px; padding-bottom: 20px; 
-        box-shadow: 0 8px 20px rgba(0,0,0,0.4); transform-origin: center; opacity: 0; z-index: 50; 
-        transition: opacity 1s ease-in-out, transform 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
-        pointer-events: none; border-radius: 4px; 
-    }
-    .photo-card img { width: 100%; height: auto; display: block; border: 1px solid #f0f0f0; border-radius: 2px;}
-
-    /* --- VƯỜN HOA TULIP --- */
-    .garden { 
-        position: absolute; bottom: 0; width: 100%; height: 160px; 
-        display: flex; justify-content: center; align-items: flex-end; gap: 50px; 
-        pointer-events: none; z-index: 60; 
-    }
-    .tulip { position: relative; display: flex; flex-direction: column; align-items: center; transform-origin: bottom; animation: gentleSway 3s infinite ease-in-out alternate; }
-    
-    .stem { width: 6px; height: 80px; background: linear-gradient(to right, #2d6a4f, #40916c); border-radius: 10px; z-index: 2; }
-    
-    .flower { position: relative; width: 44px; height: 50px; z-index: 3; margin-bottom: -5px; }
-    .petal { position: absolute; background: linear-gradient(to top, var(--pink-main), #ff8fa3); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; box-shadow: inset 2px -5px 10px rgba(0,0,0,0.1); }
-    .petal.main { width: 34px; height: 50px; left: 5px; z-index: 3; }
-    .petal.left { width: 28px; height: 42px; left: -2px; top: 5px; transform: rotate(-20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
-    .petal.right { width: 28px; height: 42px; right: -2px; top: 5px; transform: rotate(20deg); z-index: 2; background: linear-gradient(to top, #ff4d6d, #ffccd5); }
-
-    .leaf { 
-        position: absolute; 
-        width: 25px; height: 90px; 
-        background: linear-gradient(to top, var(--green-dark), #52b788);
-        bottom: 5px; z-index: 1; 
-    }
-    .leaf.left { left: 50%; margin-left: -20px; border-radius: 100% 0 50% 0; transform-origin: bottom right; transform: rotate(-22deg); }
-    .leaf.right { left: 50%; margin-left: -5px; border-radius: 0 100% 0 50%; transform-origin: bottom left; transform: rotate(22deg); }
-
-    @keyframes gentleSway { 0% { transform: rotate(-2deg); } 100% { transform: rotate(2deg); } }
-    @keyframes floatInfo { 0% { transform: translate(var(--x), var(--y)) rotate(var(--r)); } 100% { transform: translate(var(--x), calc(var(--y) - 10px)) rotate(calc(var(--r) + 2deg)); } }
-
-    /* MÈO BẮN CHỮ */
-    #cute-cat { position: absolute; left: -180px; bottom: 10px; width: 150px; height: auto; transition: left 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 20; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
-    body.in-scene2 #cute-cat { left: -10px; }
-    
-    .mini-heart { 
-        position: absolute; color: var(--pink-main); font-size: 13px; pointer-events: none; z-index: 15; 
-        transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 1.5s ease; 
-        filter: drop-shadow(0 0 4px rgba(255, 77, 109, 0.8)); opacity: 1;
-    }
-
-    /* BUTTONS */
-    .action-btn-text { position: absolute; padding: 15px 40px; background: var(--pink-main); color: white; border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem; cursor: pointer; z-index: 1000; box-shadow: 0 10px 25px rgba(255, 77, 109, 0.4); transition: 0.3s; top: 70%; left: 50%; transform: translateX(-50%); }
-    .action-btn-text:hover { transform: translate(-50%) scale(1.1); background: var(--pink-light); }
-
-    .arrow-btn { position: fixed; background: none; border: none; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
-    .arrow-btn svg { width: 60px; height: 60px; fill: var(--pink-main); filter: drop-shadow(0 0 10px var(--pink-main)) drop-shadow(0 0 20px var(--pink-glow)); }
-
-    #btn-next-right { top: 75%; left: 50%; animation: bounceRight 1.5s infinite; }
-    @keyframes bounceRight { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateX(0);} 40% {transform: translateX(-50%) translateX(20px);} 60% {transform: translateX(-50%) translateX(10px);} }
-
-    #btn-down-arrow { bottom: 30px; left: 50%; animation: bounceDown 1.5s infinite; }
-    @keyframes bounceDown { 0%, 20%, 50%, 80%, 100% {transform: translateX(-50%) translateY(0);} 40% {transform: translateX(-50%) translateY(-20px);} 60% {transform: translateX(-50%) translateY(-10px);} }
-
-    /* CANVAS THỦ KHOA LÝ */
-    #scene3 { width: 100vw; height: 100vh; position: relative; background: transparent; }
-    canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: block; background: transparent; }
-</style>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700;900&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<div id="universe">
-    <div class="screen" id="screen1">
-        <div class="scene" id="scene1">
-            <div class="envelope-wrapper">
-                <div class="envelope" id="env">
-                    <div class="lid"></div>
-                    <div class="letter">
-                        <div class="sticker sticker-tl">🌸</div>
-                        <div class="sticker sticker-br">🌺</div>
-                        <div id="line1" style="font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-                        <div id="line2" style="text-align: left; text-indent: 10px;"></div>
-                        <div id="line3" style="text-align: left; text-indent: 10px;"></div>
-                        <div id="line4" style="font-weight: bold; text-align: center; margin-top: 5px; color: var(--pink-main);"></div>
-                    </div>
-                </div>
-            </div>
-            <button class="action-btn-text" id="btn-open" onclick="openLetter()">Nhấn để mở quà 💌</button>
-            
-            <button id="btn-next-right" class="arrow-btn" onclick="goToScene2()">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
-            </button>
-
-            <div class="garden">
-                <div class="tulip"><div class="flower"><div class="petal left"></div><div class="petal right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-                <div class="tulip" style="animation-delay: -1s"><div class="flower"><div class="petal left"></div><div class="petal right"></div><div class="petal main"></div></div><div class="stem" style="height: 80px"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-                <div class="tulip" style="animation-delay: -2s"><div class="flower"><div class="petal left"></div><div class="petal right"></div><div class="petal main"></div></div><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div></div>
-            </div>
-        </div>
-
-        <div class="scene" id="scene2">
-            <img id="cute-cat" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJ5bnZ6bm1oam1oam1oam1oam1oam1oam1oam1oam1oam1oYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/MDJ9Ibxx54XB9D9u1h/giphy.gif" alt="Cute Cat">
-        </div>
-    </div>
-
-    <div class="screen" id="scene2">
-        <div id="scene3">
-            <canvas id="pinkboard"></canvas>
-        </div>
-    </div>
-</div>
-
-<button id="btn-down-arrow" class="arrow-btn" onclick="scrollDownToScene3()">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 15.6315L20.9679 6.66357L22.3822 8.07779L12 18.4599L1.61783 8.07779L3.03212 6.66357L12 15.6315Z"></path></svg>
-</button>
-
 <script>
     // 1. DANH SÁCH ẢNH (Thay link của ông vào)
+    // Tui sẽ dùng 4 ảnh đầu của mỗi danh sách để chia 4 trái - 4 phải nha
      const photos1 = [
 
         "./images/anh1.jpg.JPG",
@@ -207,6 +25,27 @@
 
     ];
 
+    // --- 📍 BẢN ĐỒ VỊ TRÍ CHUẨN (4 TRÁI - 4 PHẢI) ---
+    // x: Khoảng cách ngang (âm là trái, dương là phải). Thư rộng ~320, nên x > 180 là an toàn.
+    // y: Độ cao (âm là trên, dương là dưới). Hoa cao ~160 từ đáy, nên y < 150 là an toàn.
+
+    // 4 Vị trí bên TRÁI (Xếp dích dắc)
+    const posLeft = [
+        { x: -320, y: -150, r: -15 }, // 1. Trên cao, xa
+        { x: -220, y: -50,  r: 5 },   // 2. Giữa trên, gần
+        { x: -320, y: 50,   r: -10 }, // 3. Giữa dưới, xa
+        { x: -220, y: 140,  r: 10 }   // 4. Dưới thấp, gần (vẫn cao hơn hoa)
+    ];
+
+    // 4 Vị trí bên PHẢI (Đối xứng lại)
+    const posRight = [
+        { x: 320, y: -150, r: 15 },  // 1. Trên cao, xa
+        { x: 220, y: -50,  r: -5 },  // 2. Giữa trên, gần
+        { x: 320, y: 50,   r: 10 },  // 3. Giữa dưới, xa
+        { x: 220, y: 140,  r: -10 }  // 4. Dưới thấp, gần
+    ];
+
+
     const universe = document.getElementById('universe');
     for(let i=0; i<150; i++) {
         let s = document.createElement('div'); s.className = 'star';
@@ -229,7 +68,7 @@
         type();
     }
 
-    // --- LOGIC MỞ THƯ ---
+    // --- LOGIC MỞ THƯ (DÙNG BẢN ĐỒ MỚI) ---
     function openLetter() {
         document.getElementById('env').classList.add('open');
         document.getElementById('btn-open').style.opacity = '0';
@@ -237,42 +76,49 @@
 
         let group1Els = []; let group2Els = []; 
 
-        // 🔥 THUẬT TOÁN CHIA PHE TRÁI/PHẢI CHO NHÓM 1
-        photos1.forEach((url, i) => {
+        // 🔥 NHÓM TRÁI: Lấy 4 ảnh đầu của photos1 đặt vào vị trí bên trái
+        for(let i=0; i<4; i++) {
+            let url = photos1[i];
+            let p = posLeft[i];
+            
             let img = document.createElement('div'); img.className = 'photo-card';
-            img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
+            img.innerHTML = `<img src="${url}">`; 
+            img.style.left = '50%'; img.style.top = '45%'; img.style.transform = 'translate(-50%, -50%) scale(0)';
+            
             document.getElementById('scene1').appendChild(img); group1Els.push(img);
             
-            let x, y;
-            const baseX = 330; const randomX = Math.random() * 50;
-            // Dàn đều theo chiều dọc từ trên xuống dưới
-            const baseY = ((i % 4) * 90) - 140; const randomY = (Math.random() - 0.5) * 30;
-
-            if (i < 4) { x = baseX + randomX; y = baseY + randomY; } // 4 tấm bên PHẢI
-            else { x = -baseX - randomX; y = baseY + randomY; } // 4 tấm bên TRÁI
+            img.style.setProperty('--x', `calc(-50% + ${p.x}px)`); 
+            img.style.setProperty('--y', `calc(-50% + ${p.y}px)`); 
+            img.style.setProperty('--r', `${p.r}deg`);
             
-            let rot = (Math.random() - 0.5) * 30;
-            img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
-            setTimeout(() => { img.style.opacity = '1'; img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500); }, i * 150);
-        });
+            setTimeout(() => { 
+                img.style.opacity = '1'; 
+                img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; 
+                setTimeout(() => { img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`; }, 1500); 
+            }, i * 150);
+        }
 
-        // 🔥 THUẬT TOÁN CHIA PHE TRÁI/PHẢI CHO NHÓM 2 (So le hơn)
-        photos2.forEach((url, i) => {
+        // 🔥 NHÓM PHẢI: Lấy 4 ảnh đầu của photos2 đặt vào vị trí bên phải
+        for(let i=0; i<4; i++) {
+            let url = photos2[i];
+            let p = posRight[i];
+
             let img = document.createElement('div'); img.className = 'photo-card';
-            img.innerHTML = `<img src="${url}">`; img.style.left = '50%'; img.style.top = '45%'; document.getElementById('scene1').appendChild(img); group2Els.push(img);
+            img.innerHTML = `<img src="${url}">`; 
+            img.style.left = '50%'; img.style.top = '45%'; 
+            document.getElementById('scene1').appendChild(img); group2Els.push(img);
             
-            let x, y;
-            const baseX = 380; const randomX = Math.random() * 60; // Xa hơn nhóm 1
-            const baseY = ((i % 4) * 100) - 160; const randomY = (Math.random() - 0.5) * 40; // Giãn rộng hơn
+            img.style.setProperty('--x', `calc(-50% + ${p.x}px)`); 
+            img.style.setProperty('--y', `calc(-50% + ${p.y}px)`); 
+            img.style.setProperty('--r', `${p.r}deg`);
+            
+            // Nhóm này ẩn trước, bay ra đúng vị trí
+            img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; 
+            img.style.opacity = '0';
+            img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
+        }
 
-            if (i < 4) { x = baseX + randomX; y = baseY + randomY; } // 4 tấm bên PHẢI
-            else { x = -baseX - randomX; y = baseY + randomY; } // 4 tấm bên TRÁI
-
-            let rot = (Math.random() - 0.5) * 40;
-            img.style.setProperty('--x', `calc(-50% + ${x}px)`); img.style.setProperty('--y', `calc(-50% + ${y}px)`); img.style.setProperty('--r', `${rot}deg`);
-            img.style.transform = `translate(var(--x), var(--y)) rotate(var(--r))`; img.style.animation = `floatInfo ${3 + Math.random()}s ease-in-out infinite alternate`;
-        });
-
+        // Hiệu ứng ẩn hiện luân phiên 2 nhóm trái phải
         setTimeout(() => {
             let showGroup1 = true;
             setInterval(() => {
@@ -284,6 +130,7 @@
             }, 3500);
         }, 3000);
 
+        // Gõ thư và hiện Sticker
         setTimeout(() => {
             setTimeout(() => {
                 document.querySelectorAll('.sticker').forEach(s => {
@@ -498,5 +345,3 @@
         render();
     }
 </script>
-</body>
-</html>
